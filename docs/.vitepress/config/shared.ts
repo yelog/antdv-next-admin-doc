@@ -58,5 +58,9 @@ export const shared = defineConfig({
     },
   },
 
+  ignoreDeadLinks: [
+    /^https?:\/\/localhost/,
+  ],
+
   lastUpdated: true,
 })
