@@ -1,0 +1,78 @@
+/**
+ * Custom theme styles for Antdv Next Admin documentation.
+ * Uses Ant Design Blue (#1677ff) as the brand color.
+ */
+
+:root {
+  --vp-c-brand-1: #1677ff;
+  --vp-c-brand-2: #4096ff;
+  --vp-c-brand-3: #0958d9;
+  --vp-c-brand-soft: rgba(22, 119, 255, 0.14);
+
+  /* Hero */
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(135deg, #1677ff 10%, #69b1ff 50%, #0958d9 100%);
+  --vp-home-hero-image-background-image: linear-gradient(135deg, rgba(22, 119, 255, 0.2) 10%, rgba(105, 177, 255, 0.2) 100%);
+  --vp-home-hero-image-filter: blur(44px);
+
+  /* Buttons */
+  --vp-button-brand-border: transparent;
+  --vp-button-brand-text: #fff;
+  --vp-button-brand-bg: #1677ff;
+  --vp-button-brand-hover-border: transparent;
+  --vp-button-brand-hover-text: #fff;
+  --vp-button-brand-hover-bg: #4096ff;
+  --vp-button-brand-active-border: transparent;
+  --vp-button-brand-active-text: #fff;
+  --vp-button-brand-active-bg: #0958d9;
+}
+
+.dark {
+  --vp-c-brand-1: #4096ff;
+  --vp-c-brand-2: #1677ff;
+  --vp-c-brand-3: #69b1ff;
+  --vp-c-brand-soft: rgba(64, 150, 255, 0.16);
+
+  --vp-home-hero-image-background-image: linear-gradient(135deg, rgba(22, 119, 255, 0.15) 10%, rgba(105, 177, 255, 0.15) 100%);
+}
+
+/* Tip blocks match brand color */
+.custom-block.tip {
+  border-color: var(--vp-c-brand-1);
+}
+
+/* Rounded code blocks */
+.vp-doc div[class*='language-'] {
+  border-radius: 8px;
+}
+
+/* Better table rendering */
+.vp-doc table {
+  display: table;
+  width: 100%;
+  overflow: auto;
+}
+
+.vp-doc table th,
+.vp-doc table td {
+  padding: 10px 16px;
+}
+
+.vp-doc table th {
+  font-weight: 600;
+  background-color: var(--vp-c-bg-soft);
+}
+
+/* Feature cards hover effect */
+.VPFeature {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.VPFeature:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
+}
+
+.dark .VPFeature:hover {
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
