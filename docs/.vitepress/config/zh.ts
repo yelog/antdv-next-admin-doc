@@ -49,6 +49,7 @@ export const zh = defineConfig({
             { text: 'ProStatus 状态指示器', link: '/components/pro-status' },
             { text: 'ProChart 图表卡片', link: '/components/pro-chart' },
             { text: 'ProUpload 上传组件', link: '/components/pro-upload' },
+            { text: 'ProDetail 详情页', link: '/components/pro-detail' },
           ],
         },
       ],
