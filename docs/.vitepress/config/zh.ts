@@ -52,6 +52,7 @@ export const zh = defineConfig({
             { text: 'ProDetail 详情页', link: '/components/pro-detail' },
             { text: 'ProStatCard 统计卡片', link: '/components/pro-stat-card' },
             { text: 'ProStepForm 步骤表单', link: '/components/pro-step-form' },
+            { text: 'ProSplitLayout 分栏布局', link: '/components/pro-split-layout' },
           ],
         },
       ],

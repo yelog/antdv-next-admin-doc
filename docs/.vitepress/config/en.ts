@@ -52,6 +52,7 @@ export const en = defineConfig({
             { text: 'ProDetail', link: '/en/components/pro-detail' },
             { text: 'ProStatCard', link: '/en/components/pro-stat-card' },
             { text: 'ProStepForm', link: '/en/components/pro-step-form' },
+            { text: 'ProSplitLayout', link: '/en/components/pro-split-layout' },
           ],
         },
       ],
