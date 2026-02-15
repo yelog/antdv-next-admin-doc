@@ -78,8 +78,8 @@ Form field configuration interface:
 | `tooltip` | `string` | Help tooltip text |
 | `placeholder` | `string` | Placeholder text |
 | `colSpan` | `number` | Grid column span |
-| `hidden` | `boolean` | Hide field |
-| `options` | `Array<{ label, value, disabled? }>` | Options for select/radio/checkbox |
+| `hidden` | `boolean \| ((values: Record<string, any>) => boolean)` | Hide field, supports function form for dynamic control based on other field values |
+| `options` | `Array<{ label, value, disabled? }> \| ((values) => Array<{ label, value, disabled? }>)` | Options list, supports function form for dynamic generation based on other field values |
 | `props` | `Record<string, any>` | Extra props passed to the component |
 | `valuePropName` | `string` | Value prop name (e.g. `'checked'` for Switch) |
 | `render` | `(form) => any` | Custom render function |
@@ -159,6 +159,74 @@ Use the `request` property to load options asynchronously:
     return res.map(d => ({ label: d.name, value: d.id }))
   },
 }
+```
+
+## Dynamic Field Dependencies
+
+Both `hidden` and `options` support function form, receiving all current field values as parameter for cross-field control:
+
+### Dynamic Show/Hide
+
+```typescript
+const formItems: ProFormItem[] = [
+  {
+    name: 'notifyType',
+    label: 'Notification',
+    type: 'select',
+    options: [
+      { label: 'Email', value: 'email' },
+      { label: 'SMS', value: 'sms' },
+    ],
+  },
+  {
+    name: 'email',
+    label: 'Email Address',
+    type: 'input',
+    hidden: (values) => values.notifyType !== 'email',
+  },
+  {
+    name: 'phone',
+    label: 'Phone Number',
+    type: 'input',
+    hidden: (values) => values.notifyType !== 'sms',
+  },
+]
+```
+
+### Dynamic Options
+
+```typescript
+const formItems: ProFormItem[] = [
+  {
+    name: 'country',
+    label: 'Country',
+    type: 'select',
+    options: [
+      { label: 'China', value: 'cn' },
+      { label: 'United States', value: 'us' },
+    ],
+  },
+  {
+    name: 'city',
+    label: 'City',
+    type: 'select',
+    options: (values) => {
+      if (values.country === 'cn') {
+        return [
+          { label: 'Beijing', value: 'beijing' },
+          { label: 'Shanghai', value: 'shanghai' },
+        ]
+      }
+      if (values.country === 'us') {
+        return [
+          { label: 'New York', value: 'new_york' },
+          { label: 'San Francisco', value: 'san_francisco' },
+        ]
+      }
+      return []
+    },
+  },
+]
 ```
 
 ## Events

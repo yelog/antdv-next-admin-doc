@@ -16,16 +16,16 @@ const columns: ProTableColumn[] = [
     title: 'Name',
     dataIndex: 'name',
     search: true,
-    searchType: 'input',
   },
   {
     title: 'Status',
     dataIndex: 'status',
     valueType: 'tag',
-    valueEnum: {
-      active: { text: 'Active', color: 'green' },
-      inactive: { text: 'Inactive', color: 'red' },
-    },
+    search: true,
+    options: [
+      { label: 'Active', value: 'active', color: 'green' },
+      { label: 'Inactive', value: 'inactive', color: 'red' },
+    ],
   },
   {
     title: 'Created At',
@@ -71,6 +71,12 @@ const request: ProTableRequest = async (params) => {
 | `ellipsis` | `boolean` | `true` | Text overflow ellipsis |
 | `bordered` | `boolean` | `true` | Show border |
 | `fixedHeader` | `boolean` | `true` | Fixed header on scroll |
+| `formItems` | `ProFormItem[]` | — | Form config for built-in CRUD modal |
+| `formLayout` | `ProFormLayout` | — | CRUD modal form layout |
+| `formGrid` | `ProFormGrid` | — | CRUD modal form grid |
+| `formModalWidth` | `number \| string` | `640` | CRUD modal width |
+| `formCreateTitle` | `string` | `'Add'` | Create modal title |
+| `formEditTitle` | `string` | `'Edit'` | Edit modal title |
 
 ## ProTableColumn
 
@@ -92,30 +98,32 @@ Column configuration interface defining rendering, search, and interaction behav
 | `valueEnum` | `Record<string, { text, status?, color? }>` | Enum mapping |
 | `copyable` | `boolean` | Enable copy on click |
 | `search` | `boolean` | Generate search field |
-| `searchType` | `SearchType` | Search field type |
+| `searchType` | `SearchType` | Search field type (auto-inferred from valueType if omitted) |
 | `searchOptions` | `Array<{ label, value }>` | Search select options |
+| `options` | `Array<{ label, value, color?, status?, disabled? }>` | Unified options — auto-derives `searchOptions` and `valueEnum` |
 | `searchProps` | `Record<string, any>` | Extra search field props |
 | `headerFilter` | `ProTableHeaderFilter` | Header filter config |
 | `sorter` | `boolean \| ((a, b) => number)` | Enable sorting |
 | `defaultSortOrder` | `'ascend' \| 'descend'` | Default sort direction |
 | `actions` | `ProTableAction[]` | Action column buttons |
 | `render` | `(text, record, index) => any` | Custom render function |
+| `valueTypeProps` | `Record<string, any>` | Custom rendering params for ValueType (e.g. date format, currency symbol) |
 
 ## ValueType
 
 | Type | Description | Example |
 | --- | --- | --- |
 | `text` | Plain text (default) | `Hello` |
-| `date` | Date | `2024-01-15` |
-| `dateTime` | Date and time | `2024-01-15 14:30:00` |
+| `date` | Date — customizable via valueTypeProps.format | `2024-01-15` |
+| `dateTime` | Date and time — customizable via valueTypeProps.format | `2024-01-15 14:30:00` |
 | `dateRange` | Date range | — |
 | `time` | Time | `14:30:00` |
 | `tag` | Tag (use with `valueEnum`) | — |
 | `badge` | Badge (use with `valueEnum`) | — |
-| `money` | Currency (with symbol and formatting) | `¥12,345.00` |
-| `percent` | Percentage | `85.50%` |
-| `avatar` | Avatar (32px circle) | — |
-| `image` | Image (80px width) | — |
+| `money` | Currency (with symbol and formatting) — customizable via valueTypeProps.symbol and precision | `¥12,345.00` |
+| `percent` | Percentage — customizable via valueTypeProps.precision | `85.50%` |
+| `avatar` | Avatar (32px circle) — customizable via valueTypeProps.size | — |
+| `image` | Image (80px width) — customizable via valueTypeProps.width | — |
 | `link` | Hyperlink | — |
 | `progress` | Progress bar | — |
 
@@ -130,6 +138,62 @@ Column configuration interface defining rendering, search, and interaction behav
 | `number` | Number input |
 | `checkbox` | Checkbox |
 | `radio` | Radio |
+
+## Unified Options
+
+Use the `options` property to define column options once, automatically deriving both `valueEnum` (for rendering) and `searchOptions` (for search dropdowns):
+
+```typescript
+{
+  title: 'Status',
+  dataIndex: 'status',
+  valueType: 'tag',
+  search: true,
+  options: [
+    { label: 'Active', value: 'active', color: 'green' },
+    { label: 'Inactive', value: 'inactive', color: 'red' },
+  ],
+}
+```
+
+This is equivalent to setting `valueEnum` + `searchOptions` separately, reducing configuration duplication. If both `options` and `valueEnum`/`searchOptions` are set, the latter takes precedence.
+
+## valueTypeProps
+
+Customize ValueType rendering with `valueTypeProps`:
+
+```typescript
+const columns: ProTableColumn[] = [
+  {
+    title: 'Created At',
+    dataIndex: 'createdAt',
+    valueType: 'date',
+    valueTypeProps: { format: 'YYYY/MM/DD' },
+  },
+  {
+    title: 'Amount',
+    dataIndex: 'amount',
+    valueType: 'money',
+    valueTypeProps: { symbol: '$', precision: 0 },
+  },
+  {
+    title: 'Progress',
+    dataIndex: 'progress',
+    valueType: 'progress',
+    valueTypeProps: { strokeColor: '#52c41a', showInfo: true },
+  },
+]
+```
+
+| ValueType | Available Props | Description |
+| --- | --- | --- |
+| `date` | `format` | Date format, default `'YYYY-MM-DD'` |
+| `dateTime` | `format` | DateTime format, default `'YYYY-MM-DD HH:mm:ss'` |
+| `money` | `symbol`, `precision` | Currency symbol (default `¥`) and decimal places (default `2`) |
+| `percent` | `precision` | Decimal places (default `2`) |
+| `avatar` | `size` | Avatar size (default `32`) |
+| `image` | `width` | Image width (default `80`) |
+| `progress` | All `a-progress` props | Passed through to progress component |
 
 ## ProTableAction
 
@@ -201,6 +265,13 @@ Built-in tools:
 - **Density** — Toggle table density (large/middle/small)
 - **Column Settings** — Column visibility, ordering, and pinning
 
+## Events
+
+| Event | Params | Description |
+| --- | --- | --- |
+| `refresh` | — | Triggered when refresh button is clicked |
+| `form-submit` | `{ values, record, isEdit }` | Triggered when built-in form is submitted |
+
 ## Slots
 
 | Slot | Description |
@@ -208,12 +279,68 @@ Built-in tools:
 | `toolbar-actions` | Custom actions area on toolbar right side |
 | `bodyCell` | Custom cell rendering |
 
+## Built-in CRUD Modal
+
+By configuring `formItems`, ProTable can embed a CRUD modal without manually managing ProModal + ProForm:
+
+```vue
+<script setup lang="ts">
+import ProTable from '@/components/Pro/ProTable/index.vue'
+import type { ProTableColumn, ProFormItem } from '@/types/pro'
+
+const tableRef = ref()
+
+const columns: ProTableColumn[] = [
+  { title: 'Name', dataIndex: 'name', search: true },
+  { title: 'Email', dataIndex: 'email' },
+  {
+    title: 'Actions',
+    dataIndex: 'action',
+    actions: [
+      { label: 'Edit', onClick: (record) => tableRef.value?.openEditModal(record) },
+    ],
+  },
+]
+
+const formItems: ProFormItem[] = [
+  { name: 'name', label: 'Name', type: 'input', required: true },
+  { name: 'email', label: 'Email', type: 'input' },
+]
+
+const handleFormSubmit = async ({ values, record, isEdit }) => {
+  if (isEdit) {
+    await updateUser(record.id, values)
+  } else {
+    await createUser(values)
+  }
+  tableRef.value?.refresh()
+}
+</script>
+
+<template>
+  <ProTable
+    ref="tableRef"
+    :columns="columns"
+    :request="request"
+    :form-items="formItems"
+    :form-grid="{ cols: 2 }"
+    @form-submit="handleFormSubmit"
+  >
+    <template #toolbar-actions>
+      <a-button type="primary" @click="tableRef?.openCreateModal()">Add</a-button>
+    </template>
+  </ProTable>
+</template>
+```
+
 ## Exposed Methods
 
 | Method | Description |
 | --- | --- |
 | `refresh()` | Reload data with current params |
 | `reload()` | Reset pagination and reload |
+| `openCreateModal(initialValues?)` | Open the create modal |
+| `openEditModal(record)` | Open the edit modal (auto-fills data) |
 
 ```vue
 <script setup lang="ts">

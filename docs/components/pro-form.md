@@ -78,8 +78,8 @@ const handleSubmit = (values: Record<string, any>) => {
 | `tooltip` | `string` | 帮助提示文本 |
 | `placeholder` | `string` | 占位提示文本 |
 | `colSpan` | `number` | 网格列跨度 |
-| `hidden` | `boolean` | 是否隐藏 |
-| `options` | `Array<{ label, value, disabled? }>` | 下拉/单选/复选选项 |
+| `hidden` | `boolean \| ((values: Record<string, any>) => boolean)` | 是否隐藏，支持函数形式根据其他字段值动态控制 |
+| `options` | `Array<{ label, value, disabled? }> \| ((values) => Array<{ label, value, disabled? }>)` | 选项列表，支持函数形式根据其他字段值动态生成 |
 | `props` | `Record<string, any>` | 传递给组件的额外属性 |
 | `valuePropName` | `string` | 值属性名（如 Switch 使用 `'checked'`） |
 | `render` | `(form) => any` | 自定义渲染函数 |
@@ -159,6 +159,74 @@ const formItems: ProFormItem[] = [
     return res.map(d => ({ label: d.name, value: d.id }))
   },
 }
+```
+
+## 动态字段联动
+
+`hidden` 和 `options` 均支持函数形式，接收当前所有字段值作为参数，实现字段间的联动控制：
+
+### 动态显示/隐藏
+
+```typescript
+const formItems: ProFormItem[] = [
+  {
+    name: 'notifyType',
+    label: '通知方式',
+    type: 'select',
+    options: [
+      { label: '邮箱', value: 'email' },
+      { label: '短信', value: 'sms' },
+    ],
+  },
+  {
+    name: 'email',
+    label: '邮箱地址',
+    type: 'input',
+    hidden: (values) => values.notifyType !== 'email',
+  },
+  {
+    name: 'phone',
+    label: '手机号码',
+    type: 'input',
+    hidden: (values) => values.notifyType !== 'sms',
+  },
+]
+```
+
+### 动态选项
+
+```typescript
+const formItems: ProFormItem[] = [
+  {
+    name: 'country',
+    label: '国家',
+    type: 'select',
+    options: [
+      { label: '中国', value: 'cn' },
+      { label: '美国', value: 'us' },
+    ],
+  },
+  {
+    name: 'city',
+    label: '城市',
+    type: 'select',
+    options: (values) => {
+      if (values.country === 'cn') {
+        return [
+          { label: '北京', value: 'beijing' },
+          { label: '上海', value: 'shanghai' },
+        ]
+      }
+      if (values.country === 'us') {
+        return [
+          { label: '纽约', value: 'new_york' },
+          { label: '旧金山', value: 'san_francisco' },
+        ]
+      }
+      return []
+    },
+  },
+]
 ```
 
 ## Events

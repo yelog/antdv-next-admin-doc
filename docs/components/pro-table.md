@@ -16,16 +16,16 @@ const columns: ProTableColumn[] = [
     title: '姓名',
     dataIndex: 'name',
     search: true,
-    searchType: 'input',
   },
   {
     title: '状态',
     dataIndex: 'status',
     valueType: 'tag',
-    valueEnum: {
-      active: { text: '启用', color: 'green' },
-      inactive: { text: '禁用', color: 'red' },
-    },
+    search: true,
+    options: [
+      { label: '启用', value: 'active', color: 'green' },
+      { label: '禁用', value: 'inactive', color: 'red' },
+    ],
   },
   {
     title: '创建时间',
@@ -71,6 +71,12 @@ const request: ProTableRequest = async (params) => {
 | `ellipsis` | `boolean` | `true` | 文本溢出省略 |
 | `bordered` | `boolean` | `true` | 是否显示边框 |
 | `fixedHeader` | `boolean` | `true` | 是否固定表头 |
+| `formItems` | `ProFormItem[]` | — | 内置 CRUD 弹窗的表单配置 |
+| `formLayout` | `ProFormLayout` | — | 弹窗表单布局 |
+| `formGrid` | `ProFormGrid` | — | 弹窗表单网格 |
+| `formModalWidth` | `number \| string` | `640` | 弹窗宽度 |
+| `formCreateTitle` | `string` | `'新增'` | 新建弹窗标题 |
+| `formEditTitle` | `string` | `'编辑'` | 编辑弹窗标题 |
 
 ## ProTableColumn
 
@@ -90,11 +96,13 @@ const request: ProTableRequest = async (params) => {
 | `hideInTable` | `boolean` | 是否在表格中隐藏 |
 | `valueType` | `ValueType` | 渲染类型 |
 | `valueEnum` | `Record<string, { text, status?, color? }>` | 枚举映射 |
+| `valueTypeProps` | `Record<string, any>` | ValueType 渲染参数（如日期格式、货币符号等） |
 | `copyable` | `boolean` | 是否可复制 |
 | `search` | `boolean` | 是否生成搜索字段 |
-| `searchType` | `SearchType` | 搜索字段类型 |
+| `searchType` | `SearchType` | 搜索字段类型（可选，自动从 `valueType` 推断：tag/badge→select，date/dateTime/time→datePicker，dateRange→dateRange，money/percent/progress→number，其他→input） |
 | `searchOptions` | `Array<{ label, value }>` | 搜索下拉选项 |
 | `searchProps` | `Record<string, any>` | 搜索字段额外属性 |
+| `options` | `Array<{ label, value, color?, status?, disabled? }>` | 统一选项配置，自动派生 `searchOptions` 和 `valueEnum` |
 | `headerFilter` | `ProTableHeaderFilter` | 表头筛选配置 |
 | `sorter` | `boolean \| ((a, b) => number)` | 排序 |
 | `defaultSortOrder` | `'ascend' \| 'descend'` | 默认排序方向 |
@@ -106,16 +114,16 @@ const request: ProTableRequest = async (params) => {
 | 类型 | 说明 | 示例 |
 | --- | --- | --- |
 | `text` | 纯文本（默认） | `Hello` |
-| `date` | 日期 | `2024-01-15` |
-| `dateTime` | 日期时间 | `2024-01-15 14:30:00` |
+| `date` | 日期 | `2024-01-15`，可通过 `valueTypeProps.format` 自定义 |
+| `dateTime` | 日期时间 | `2024-01-15 14:30:00`，可通过 `valueTypeProps.format` 自定义 |
 | `dateRange` | 日期范围 | — |
 | `time` | 时间 | `14:30:00` |
 | `tag` | 标签（配合 `valueEnum` 使用） | <span style="color: green">启用</span> |
 | `badge` | 徽章（配合 `valueEnum` 使用） | — |
-| `money` | 金额（带 ¥ 和千分位） | `¥12,345.00` |
-| `percent` | 百分比 | `85.50%` |
-| `avatar` | 头像（32px 圆形） | — |
-| `image` | 图片（80px 宽） | — |
+| `money` | 金额（带 ¥ 和千分位） | `¥12,345.00`，可通过 `valueTypeProps.symbol` 和 `valueTypeProps.precision` 自定义 |
+| `percent` | 百分比 | `85.50%`，可通过 `valueTypeProps.precision` 自定义精度 |
+| `avatar` | 头像（32px 圆形） | 可通过 `valueTypeProps.size` 自定义大小 |
+| `image` | 图片（80px 宽） | 可通过 `valueTypeProps.width` 自定义宽度 |
 | `link` | 链接 | — |
 | `progress` | 进度条 | — |
 
@@ -130,6 +138,62 @@ const request: ProTableRequest = async (params) => {
 | `number` | 数字输入框 |
 | `checkbox` | 复选框 |
 | `radio` | 单选框 |
+
+## 统一选项 (Unified Options)
+
+通过 `options` 属性可以一次性定义列的选项数据，自动派生 `valueEnum`（用于渲染）和 `searchOptions`（用于搜索下拉）：
+
+```typescript
+{
+  title: '状态',
+  dataIndex: 'status',
+  valueType: 'tag',
+  search: true,
+  options: [
+    { label: '启用', value: 'active', color: 'green' },
+    { label: '禁用', value: 'inactive', color: 'red' },
+  ],
+}
+```
+
+等价于分别设置 `valueEnum` + `searchOptions`，减少重复配置。如果同时设置了 `options` 和 `valueEnum`/`searchOptions`，后者优先。
+
+## valueTypeProps 格式化参数
+
+通过 `valueTypeProps` 自定义 ValueType 的渲染参数：
+
+```typescript
+const columns: ProTableColumn[] = [
+  {
+    title: '创建时间',
+    dataIndex: 'createdAt',
+    valueType: 'date',
+    valueTypeProps: { format: 'YYYY/MM/DD' },
+  },
+  {
+    title: '金额',
+    dataIndex: 'amount',
+    valueType: 'money',
+    valueTypeProps: { symbol: '$', precision: 0 },
+  },
+  {
+    title: '完成度',
+    dataIndex: 'progress',
+    valueType: 'progress',
+    valueTypeProps: { strokeColor: '#52c41a', showInfo: true },
+  },
+]
+```
+
+| ValueType | 可用参数 | 说明 |
+| --- | --- | --- |
+| `date` | `format` | 日期格式，默认 `'YYYY-MM-DD'` |
+| `dateTime` | `format` | 日期时间格式，默认 `'YYYY-MM-DD HH:mm:ss'` |
+| `money` | `symbol`, `precision` | 货币符号（默认 `¥`）和小数位数（默认 `2`） |
+| `percent` | `precision` | 小数位数（默认 `2`） |
+| `avatar` | `size` | 头像大小（默认 `32`） |
+| `image` | `width` | 图片宽度（默认 `80`） |
+| `progress` | 所有 `a-progress` 属性 | 直接透传给进度条组件 |
 
 ## ProTableAction 操作列
 
@@ -201,6 +265,13 @@ const toolbar: ProTableToolbar = {
 - **密度** — 切换表格密度（large/middle/small）
 - **列设置** — 列显示/隐藏、排序、固定
 
+## Events
+
+| 事件 | 参数 | 说明 |
+| --- | --- | --- |
+| `refresh` | — | 刷新按钮点击时触发 |
+| `form-submit` | `{ values, record, isEdit }` | 内置表单提交时触发 |
+
 ## Slots
 
 | 插槽名 | 说明 |
@@ -208,12 +279,68 @@ const toolbar: ProTableToolbar = {
 | `toolbar-actions` | 工具栏右侧自定义操作区域 |
 | `bodyCell` | 自定义单元格渲染 |
 
+## 内置 CRUD 弹窗
+
+通过 `formItems` 配置，ProTable 可内置 CRUD 弹窗，无需手动管理 ProModal + ProForm：
+
+```vue
+<script setup lang="ts">
+import ProTable from '@/components/Pro/ProTable/index.vue'
+import type { ProTableColumn, ProFormItem } from '@/types/pro'
+
+const tableRef = ref()
+
+const columns: ProTableColumn[] = [
+  { title: '姓名', dataIndex: 'name', search: true },
+  { title: '邮箱', dataIndex: 'email' },
+  {
+    title: '操作',
+    dataIndex: 'action',
+    actions: [
+      { label: '编辑', onClick: (record) => tableRef.value?.openEditModal(record) },
+    ],
+  },
+]
+
+const formItems: ProFormItem[] = [
+  { name: 'name', label: '姓名', type: 'input', required: true },
+  { name: 'email', label: '邮箱', type: 'input' },
+]
+
+const handleFormSubmit = async ({ values, record, isEdit }) => {
+  if (isEdit) {
+    await updateUser(record.id, values)
+  } else {
+    await createUser(values)
+  }
+  tableRef.value?.refresh()
+}
+</script>
+
+<template>
+  <ProTable
+    ref="tableRef"
+    :columns="columns"
+    :request="request"
+    :form-items="formItems"
+    :form-grid="{ cols: 2 }"
+    @form-submit="handleFormSubmit"
+  >
+    <template #toolbar-actions>
+      <a-button type="primary" @click="tableRef?.openCreateModal()">新增</a-button>
+    </template>
+  </ProTable>
+</template>
+```
+
 ## 暴露方法
 
 | 方法 | 说明 |
 | --- | --- |
 | `refresh()` | 使用当前参数重新加载数据 |
 | `reload()` | 重置分页到第一页并重新加载 |
+| `openCreateModal(initialValues?)` | 打开新建弹窗 |
+| `openEditModal(record)` | 打开编辑弹窗（自动填充数据） |
 
 ```vue
 <script setup lang="ts">
