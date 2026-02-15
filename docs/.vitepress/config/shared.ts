@@ -9,7 +9,10 @@ export const shared = defineConfig({
   ],
 
   themeConfig: {
-    logo: '/logo.png',
+    logo: {
+      src: '/logo.png',
+      alt: 'Antdv Next Admin',
+    },
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/yelog/antdv-next-admin' },
