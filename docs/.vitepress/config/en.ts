@@ -47,6 +47,7 @@ export const en = defineConfig({
             { text: 'ProModal', link: '/en/components/pro-modal' },
             { text: 'ProDescriptions', link: '/en/components/pro-descriptions' },
             { text: 'ProStatus', link: '/en/components/pro-status' },
+            { text: 'ProChart', link: '/en/components/pro-chart' },
           ],
         },
       ],

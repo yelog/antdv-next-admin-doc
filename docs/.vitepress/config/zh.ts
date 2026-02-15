@@ -47,6 +47,7 @@ export const zh = defineConfig({
             { text: 'ProModal 高级弹窗', link: '/components/pro-modal' },
             { text: 'ProDescriptions 描述列表', link: '/components/pro-descriptions' },
             { text: 'ProStatus 状态指示器', link: '/components/pro-status' },
+            { text: 'ProChart 图表卡片', link: '/components/pro-chart' },
           ],
         },
       ],
