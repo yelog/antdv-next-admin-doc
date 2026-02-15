@@ -51,6 +51,7 @@ export const en = defineConfig({
             { text: 'ProUpload', link: '/en/components/pro-upload' },
             { text: 'ProDetail', link: '/en/components/pro-detail' },
             { text: 'ProStatCard', link: '/en/components/pro-stat-card' },
+            { text: 'ProStepForm', link: '/en/components/pro-step-form' },
           ],
         },
       ],
