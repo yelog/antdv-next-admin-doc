@@ -1,3 +1,7 @@
+---
+aside: false
+---
+
 # Composables
 
 This document introduces the composable functions provided in the Antdv Next Admin project.
@@ -70,7 +74,7 @@ import { useFullscreen } from '@/composables/useFullscreen'
 const { isFullscreen, enter, exit, toggle } = useFullscreen()
 
 // Fullscreen specific element
-const elementRef = ref<HTMLElement>()
+const elementRef = ref()
 const { isFullscreen, toggle } = useFullscreen(elementRef)
 ```
 
@@ -78,10 +82,10 @@ const { isFullscreen, toggle } = useFullscreen(elementRef)
 
 | Property | Type | Description |
 |----------|------|-------------|
-| isFullscreen | Ref<boolean> | Is fullscreen |
-| enter | () => Promise<void> | Enter fullscreen |
-| exit | () => Promise<void> | Exit fullscreen |
-| toggle | () => Promise<void> | Toggle fullscreen |
+| isFullscreen | `Ref<boolean>` | Is fullscreen |
+| enter | `() => Promise<void>` | Enter fullscreen |
+| exit | `() => Promise<void>` | Exit fullscreen |
+| toggle | `() => Promise<void>` | Toggle fullscreen |
 
 ---
 

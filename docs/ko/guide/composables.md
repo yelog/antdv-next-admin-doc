@@ -96,7 +96,7 @@ import { useFullscreen } from '@/composables/useFullscreen'
 const { isFullscreen, enter, exit, toggle } = useFullscreen()
 
 // 특정 요소를 전체 화면으로
-const elementRef = ref<HTMLElement>()
+const elementRef = ref()
 const { isFullscreen, toggle } = useFullscreen(elementRef)
 ```
 
@@ -104,10 +104,10 @@ const { isFullscreen, toggle } = useFullscreen(elementRef)
 
 | 속성 | 타입 | 설명 |
 |------|------|------|
-| isFullscreen | Ref<boolean> | 전체 화면인지 여부 |
-| enter | () => Promise<void> | 전체 화면 진입 |
-| exit | () => Promise<void> | 전체 화면 종료 |
-| toggle | () => Promise<void> | 전체 화면 토글 |
+| isFullscreen | `Ref<boolean>` | 전체 화면인지 여부 |
+| enter | `() => Promise<void>` | 전체 화면 진입 |
+| exit | `() => Promise<void>` | 전체 화면 종료 |
+| toggle | `() => Promise<void>` | 전체 화면 토글 |
 
 ### 예제
 

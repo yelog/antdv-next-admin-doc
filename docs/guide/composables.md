@@ -96,7 +96,7 @@ import { useFullscreen } from '@/composables/useFullscreen'
 const { isFullscreen, enter, exit, toggle } = useFullscreen()
 
 // 全屏特定元素
-const elementRef = ref<HTMLElement>()
+const elementRef = ref()
 const { isFullscreen, toggle } = useFullscreen(elementRef)
 ```
 
@@ -104,10 +104,10 @@ const { isFullscreen, toggle } = useFullscreen(elementRef)
 
 | 属性 | 类型 | 说明 |
 |------|------|------|
-| isFullscreen | Ref<boolean> | 是否全屏 |
-| enter | () => Promise<void> | 进入全屏 |
-| exit | () => Promise<void> | 退出全屏 |
-| toggle | () => Promise<void> | 切换全屏 |
+| isFullscreen | `Ref<boolean>` | 是否全屏 |
+| enter | `() => Promise<void>` | 进入全屏 |
+| exit | `() => Promise<void>` | 退出全屏 |
+| toggle | `() => Promise<void>` | 切换全屏 |
 
 ### 示例
 
