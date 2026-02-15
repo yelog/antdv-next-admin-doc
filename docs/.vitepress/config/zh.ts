@@ -37,6 +37,9 @@ export const zh = defineConfig({
           items: [
             { text: '开发工作流', link: '/guide/development-workflow' },
             { text: 'API 集成', link: '/guide/api-integration' },
+            { text: '工具函数', link: '/guide/utils' },
+            { text: '通用组件', link: '/guide/common-components' },
+            { text: 'Composables', link: '/guide/composables' },
           ],
         },
         {

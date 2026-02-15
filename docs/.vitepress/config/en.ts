@@ -37,6 +37,9 @@ export const en = defineConfig({
           items: [
             { text: 'Development Workflow', link: '/en/guide/development-workflow' },
             { text: 'API Integration', link: '/en/guide/api-integration' },
+            { text: 'Utils', link: '/en/guide/utils' },
+            { text: 'Common Components', link: '/en/guide/common-components' },
+            { text: 'Composables', link: '/en/guide/composables' },
           ],
         },
         {
