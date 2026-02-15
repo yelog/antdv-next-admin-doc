@@ -45,6 +45,7 @@ export const zh = defineConfig({
             { text: 'ProTable 高级表格', link: '/components/pro-table' },
             { text: 'ProForm 高级表单', link: '/components/pro-form' },
             { text: 'ProModal 高级弹窗', link: '/components/pro-modal' },
+            { text: 'ProDescriptions 描述列表', link: '/components/pro-descriptions' },
           ],
         },
       ],
