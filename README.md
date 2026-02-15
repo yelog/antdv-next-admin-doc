@@ -30,15 +30,34 @@
 
 ### 指南 (Guide)
 
+#### 开始
 - [项目介绍](docs/guide/introduction.md) - 了解 Antdv Next Admin 的核心特性
 - [快速上手](docs/guide/getting-started.md) - 5 分钟快速开始
 - [项目结构](docs/guide/project-structure.md) - 目录组织和文件说明
+
+#### 核心功能
 - [路由系统](docs/guide/routing.md) - 动态路由与权限控制
 - [权限系统](docs/guide/permission.md) - RBAC 权限管理详解
 - [主题系统](docs/guide/theme.md) - 自定义主题与暗色模式
 - [国际化](docs/guide/i18n.md) - 多语言配置指南
 - [Mock 数据](docs/guide/mock.md) - 本地开发 mock 方案
+- [状态管理](docs/guide/state-management.md) - Pinia Store 详解
+
+#### 开发指南
+- [开发工作流](docs/guide/development-workflow.md) - 项目开发规范与流程
+- [API 集成](docs/guide/api-integration.md) - 后端 API 对接指南
+- [工具函数](docs/guide/utils.md) - 常用工具函数文档
+- [通用组件](docs/guide/common-components.md) - 非 Pro 组件文档
+- [Composables](docs/guide/composables.md) - 组合式函数文档
+
+#### 进阶
+- [多标签页](docs/guide/tabs.md) - 多标签页系统详解
+- [布局系统](docs/guide/layout.md) - 布局配置与响应式适配
+- [示例与实战](docs/guide/examples.md) - 完整开发案例
+
+#### 其他
 - [部署指南](docs/guide/deployment.md) - 生产环境部署
+- [FAQ](docs/guide/faq.md) - 常见问题与故障排查
 
 ### Pro 组件
 
