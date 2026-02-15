@@ -29,6 +29,14 @@ export const en = defineConfig({
             { text: 'Theming', link: '/en/guide/theme' },
             { text: 'Internationalization', link: '/en/guide/i18n' },
             { text: 'Mock Data', link: '/en/guide/mock' },
+            { text: 'State Management', link: '/en/guide/state-management' },
+          ],
+        },
+        {
+          text: 'Development',
+          items: [
+            { text: 'Development Workflow', link: '/en/guide/development-workflow' },
+            { text: 'API Integration', link: '/en/guide/api-integration' },
           ],
         },
         {

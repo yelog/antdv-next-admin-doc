@@ -29,6 +29,14 @@ export const zh = defineConfig({
             { text: '主题系统', link: '/guide/theme' },
             { text: '国际化', link: '/guide/i18n' },
             { text: 'Mock 数据', link: '/guide/mock' },
+            { text: '状态管理', link: '/guide/state-management' },
+          ],
+        },
+        {
+          text: '开发指南',
+          items: [
+            { text: '开发工作流', link: '/guide/development-workflow' },
+            { text: 'API 集成', link: '/guide/api-integration' },
           ],
         },
         {
