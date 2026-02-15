@@ -6,7 +6,7 @@ hero:
   text: 现代化后台管理系统脚手架
   tagline: 基于 Vue 3 + TypeScript + Ant Design Vue，开箱即用的企业级中后台解决方案
   image:
-    src: /logo.svg
+    src: /logo.png
     alt: Antdv Next Admin
   actions:
     - theme: brand

@@ -4,12 +4,12 @@ export const shared = defineConfig({
   title: 'Antdv Next Admin',
 
   head: [
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],
+    ['link', { rel: 'icon', type: 'image/png', href: '/logo.png' }],
     ['meta', { name: 'theme-color', content: '#1677ff' }],
   ],
 
   themeConfig: {
-    logo: '/logo.svg',
+    logo: '/logo.png',
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/yelog/antdv-next-admin' },

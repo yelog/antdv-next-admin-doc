@@ -6,7 +6,7 @@ hero:
   text: Modern Admin Scaffold
   tagline: An enterprise-grade admin solution built with Vue 3 + TypeScript + Ant Design Vue, ready out of the box
   image:
-    src: /logo.svg
+    src: /logo.png
     alt: Antdv Next Admin
   actions:
     - theme: brand
