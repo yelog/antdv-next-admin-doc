@@ -43,6 +43,14 @@ export const en = defineConfig({
           ],
         },
         {
+          text: 'Advanced',
+          items: [
+            { text: 'Tabs System', link: '/en/guide/tabs' },
+            { text: 'Layout System', link: '/en/guide/layout' },
+            { text: 'Examples', link: '/en/guide/examples' },
+          ],
+        },
+        {
           text: 'Other',
           items: [
             { text: 'Deployment', link: '/en/guide/deployment' },

@@ -43,6 +43,14 @@ export const zh = defineConfig({
           ],
         },
         {
+          text: '进阶',
+          items: [
+            { text: '多标签页', link: '/guide/tabs' },
+            { text: '布局系统', link: '/guide/layout' },
+            { text: '示例与实战', link: '/guide/examples' },
+          ],
+        },
+        {
           text: '其他',
           items: [
             { text: '部署指南', link: '/guide/deployment' },
