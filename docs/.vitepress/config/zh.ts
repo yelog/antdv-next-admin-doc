@@ -54,6 +54,7 @@ export const zh = defineConfig({
           text: '其他',
           items: [
             { text: '部署指南', link: '/guide/deployment' },
+            { text: 'FAQ', link: '/guide/faq' },
           ],
         },
       ],

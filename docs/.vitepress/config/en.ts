@@ -54,6 +54,7 @@ export const en = defineConfig({
           text: 'Other',
           items: [
             { text: 'Deployment', link: '/en/guide/deployment' },
+            { text: 'FAQ', link: '/en/guide/faq' },
           ],
         },
       ],
