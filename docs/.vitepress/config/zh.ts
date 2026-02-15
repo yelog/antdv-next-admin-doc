@@ -50,6 +50,7 @@ export const zh = defineConfig({
             { text: 'ProChart 图表卡片', link: '/components/pro-chart' },
             { text: 'ProUpload 上传组件', link: '/components/pro-upload' },
             { text: 'ProDetail 详情页', link: '/components/pro-detail' },
+            { text: 'ProStatCard 统计卡片', link: '/components/pro-stat-card' },
           ],
         },
       ],

@@ -50,6 +50,7 @@ export const en = defineConfig({
             { text: 'ProChart', link: '/en/components/pro-chart' },
             { text: 'ProUpload', link: '/en/components/pro-upload' },
             { text: 'ProDetail', link: '/en/components/pro-detail' },
+            { text: 'ProStatCard', link: '/en/components/pro-stat-card' },
           ],
         },
       ],
