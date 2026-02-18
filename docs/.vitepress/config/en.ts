@@ -51,6 +51,14 @@ export const en = defineConfig({
           ],
         },
         {
+          text: 'Scaffold Guides',
+          items: [
+            { text: 'ProTable Advanced Scaffold', link: '/en/guide/scaffold-pro-table-advanced' },
+            { text: 'Complex Form Scaffold', link: '/en/guide/scaffold-complex-form' },
+            { text: 'Master Detail Scaffold', link: '/en/guide/scaffold-master-detail' },
+          ],
+        },
+        {
           text: 'System Modules',
           items: [
             { text: 'User Management', link: '/en/guide/system-user' },

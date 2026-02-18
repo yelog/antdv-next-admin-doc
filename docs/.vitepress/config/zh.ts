@@ -51,6 +51,14 @@ export const zh = defineConfig({
           ],
         },
         {
+          text: '脚手架专题',
+          items: [
+            { text: '高级表格脚手架', link: '/guide/scaffold-pro-table-advanced' },
+            { text: '复杂表单脚手架', link: '/guide/scaffold-complex-form' },
+            { text: '主从详情脚手架', link: '/guide/scaffold-master-detail' },
+          ],
+        },
+        {
           text: '系统模块',
           items: [
             { text: '用户管理', link: '/guide/system-user' },
