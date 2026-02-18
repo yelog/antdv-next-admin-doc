@@ -100,6 +100,13 @@ export const zh = defineConfig({
           ],
         },
         {
+          text: '集成与异常',
+          items: [
+            { text: '集成导航（外链与 IFrame）', link: '/guide/integration-navigation' },
+            { text: '异常页体系（403/404/500）', link: '/guide/exception-pages' },
+          ],
+        },
+        {
           text: '其他',
           items: [
             { text: '部署指南', link: '/guide/deployment' },

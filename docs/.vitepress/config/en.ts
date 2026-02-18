@@ -100,6 +100,13 @@ export const en = defineConfig({
           ],
         },
         {
+          text: 'Integration & Exceptions',
+          items: [
+            { text: 'Integration Navigation', link: '/en/guide/integration-navigation' },
+            { text: 'Exception Pages', link: '/en/guide/exception-pages' },
+          ],
+        },
+        {
           text: 'Other',
           items: [
             { text: 'Deployment', link: '/en/guide/deployment' },
