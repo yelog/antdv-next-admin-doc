@@ -64,6 +64,13 @@ export const zh = defineConfig({
           ],
         },
         {
+          text: '安全工程',
+          items: [
+            { text: '请求鉴权与自动刷新', link: '/guide/security-request-auth' },
+            { text: 'RBAC 权限流实战', link: '/guide/security-rbac-flow' },
+          ],
+        },
+        {
           text: '其他',
           items: [
             { text: '部署指南', link: '/guide/deployment' },

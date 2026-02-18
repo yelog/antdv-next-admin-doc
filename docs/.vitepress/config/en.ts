@@ -64,6 +64,13 @@ export const en = defineConfig({
           ],
         },
         {
+          text: 'Security',
+          items: [
+            { text: 'Request Auth and Token Refresh', link: '/en/guide/security-request-auth' },
+            { text: 'RBAC Flow in Practice', link: '/en/guide/security-rbac-flow' },
+          ],
+        },
+        {
           text: 'Other',
           items: [
             { text: 'Deployment', link: '/en/guide/deployment' },
