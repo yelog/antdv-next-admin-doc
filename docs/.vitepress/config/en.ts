@@ -59,6 +59,13 @@ export const en = defineConfig({
           ],
         },
         {
+          text: 'Business Scaffolds',
+          items: [
+            { text: 'Upload System Scaffold', link: '/en/guide/scaffold-upload-system' },
+            { text: 'State Cache Scaffold', link: '/en/guide/scaffold-state-cache' },
+          ],
+        },
+        {
           text: 'System Modules',
           items: [
             { text: 'User Management', link: '/en/guide/system-user' },
