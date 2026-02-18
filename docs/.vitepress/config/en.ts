@@ -74,6 +74,7 @@ export const en = defineConfig({
           text: 'Engineering Quality',
           items: [
             { text: 'Testing Strategy', link: '/en/guide/testing' },
+            { text: 'Observability', link: '/en/guide/observability' },
           ],
         },
         {

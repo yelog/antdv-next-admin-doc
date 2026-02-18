@@ -74,6 +74,7 @@ export const zh = defineConfig({
           text: '工程质量',
           items: [
             { text: '测试体系', link: '/guide/testing' },
+            { text: '可观测性实践', link: '/guide/observability' },
           ],
         },
         {
