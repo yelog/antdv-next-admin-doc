@@ -76,3 +76,16 @@
 .dark .VPFeature:hover {
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
 }
+
+/*
+ * Fallback for syntax highlight:
+ * some runtime structures may miss the `.vp-code span` selector path,
+ * but Shiki token colors are still stored in `--shiki-light/--shiki-dark`.
+ */
+html:not(.dark) .vp-doc div[class*='language-'] .line span {
+  color: var(--shiki-light, inherit);
+}
+
+.dark .vp-doc div[class*='language-'] .line span {
+  color: var(--shiki-dark, inherit);
+}
