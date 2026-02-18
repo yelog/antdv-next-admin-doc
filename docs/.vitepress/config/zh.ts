@@ -51,6 +51,19 @@ export const zh = defineConfig({
           ],
         },
         {
+          text: '系统模块',
+          items: [
+            { text: '用户管理', link: '/guide/system-user' },
+            { text: '角色管理', link: '/guide/system-role' },
+            { text: '权限管理', link: '/guide/system-permission' },
+            { text: '部门管理', link: '/guide/system-dept' },
+            { text: '字典管理', link: '/guide/system-dict' },
+            { text: '系统配置', link: '/guide/system-config' },
+            { text: '文件管理', link: '/guide/system-file' },
+            { text: '日志管理', link: '/guide/system-log' },
+          ],
+        },
+        {
           text: '其他',
           items: [
             { text: '部署指南', link: '/guide/deployment' },

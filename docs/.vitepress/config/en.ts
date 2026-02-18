@@ -51,6 +51,19 @@ export const en = defineConfig({
           ],
         },
         {
+          text: 'System Modules',
+          items: [
+            { text: 'User Management', link: '/en/guide/system-user' },
+            { text: 'Role Management', link: '/en/guide/system-role' },
+            { text: 'Permission Management', link: '/en/guide/system-permission' },
+            { text: 'Department Management', link: '/en/guide/system-dept' },
+            { text: 'Dictionary Management', link: '/en/guide/system-dict' },
+            { text: 'System Configuration', link: '/en/guide/system-config' },
+            { text: 'File Management', link: '/en/guide/system-file' },
+            { text: 'Log Management', link: '/en/guide/system-log' },
+          ],
+        },
+        {
           text: 'Other',
           items: [
             { text: 'Deployment', link: '/en/guide/deployment' },
