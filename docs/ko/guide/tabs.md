@@ -65,7 +65,7 @@ Vue의 `<KeepAlive>` 컴포넌트는 동적 컴포넌트의 상태를 캐시하�
 
 ### 캐시 설정
 
-`src/layouts/AdminLayout/index.vue`에서:
+`src/components/Layout/AdminLayout.vue`에서:
 
 ```vue
 <template>

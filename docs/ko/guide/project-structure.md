@@ -28,6 +28,7 @@ antdv-next-admin/
 │   ├── components/                # 공통 컴포넌트
 │   │   ├── Icon/                  # 아이콘 컴포넌트
 │   │   ├── IconPicker/            # 아이콘 선택기
+│   │   ├── Layout/                # 레이아웃 컴포넌트
 │   │   ├── Permission/            # 권한 컴포넌트
 │   │   │   └── PermissionButton.vue
 │   │   └── Pro/                   # Pro 컴포넌트
@@ -39,8 +40,6 @@ antdv-next-admin/
 │   │   └── ...
 │   ├── directives/                # 커스텀 디렉티브
 │   │   └── permission.ts          # v-permission 디렉티브
-│   ├── layouts/                   # 레이아웃 컴포넌트
-│   │   └── AdminLayout.vue
 │   ├── locales/                   # 국제화
 │   │   ├── index.ts               # i18n 설정
 │   │   ├── zh-CN.ts               # 중국어

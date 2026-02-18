@@ -135,7 +135,7 @@ const isMobile = computed(() => layoutStore.isMobile)
 
 ### AdminLayout
 
-Main layout component located at `src/layouts/AdminLayout/`.
+Main layout component located at `src/components/Layout/`.
 
 ```vue
 <template>

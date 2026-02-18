@@ -28,6 +28,7 @@ antdv-next-admin/
 │   ├── components/                # Shared components
 │   │   ├── Icon/                  # Icon component
 │   │   ├── IconPicker/            # Icon picker
+│   │   ├── Layout/                # Layout components
 │   │   ├── Permission/            # Permission components
 │   │   │   └── PermissionButton.vue
 │   │   └── Pro/                   # Pro components
@@ -39,8 +40,6 @@ antdv-next-admin/
 │   │   └── ...
 │   ├── directives/                # Custom directives
 │   │   └── permission.ts          # v-permission directive
-│   ├── layouts/                   # Layout components
-│   │   └── AdminLayout.vue
 │   ├── locales/                   # Internationalization
 │   │   ├── index.ts               # i18n setup
 │   │   ├── zh-CN.ts               # Chinese

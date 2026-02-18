@@ -65,7 +65,7 @@ Vue 的 `<KeepAlive>` 组件会缓存动态组件的状态，避免重复渲染�
 
 ### 配置缓存
 
-在 `src/layouts/AdminLayout/index.vue` 中：
+在 `src/components/Layout/AdminLayout.vue` 中：
 
 ```vue
 <template>

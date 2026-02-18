@@ -185,7 +185,7 @@ const { isMobile } = storeToRefs(layoutStore)
 
 ### AdminLayout
 
-메인 레이아웃 컴포넌트, `src/layouts/AdminLayout/`에 위치.
+메인 레이아웃 컴포넌트, `src/components/Layout/`에 위치.
 
 ```vue
 <template>
@@ -198,14 +198,13 @@ const { isMobile } = storeToRefs(layoutStore)
 ### 레이아웃 구조
 
 ```
-AdminLayout/
-├── components/
-│   ├── Sidebar/           # 侧边栏
-│   ├── Header/            # 顶部栏
-│   ├── Tabs/              # 标签栏
-│   └── Breadcrumb/        # 面包屑
-├── index.vue              # 布局主文件
-└── style.scss             # 布局样式
+components/Layout/
+├── AdminLayout.vue        # 布局主文件
+├── Sidebar.vue            # 侧边栏
+├── Header.vue             # 顶部栏
+├── TabBar.vue             # 标签栏
+├── Breadcrumb.vue         # 面包屑
+└── SettingsDrawer.vue     # 偏好设置抽屉
 ```
 
 ### 슬롯
@@ -235,21 +234,17 @@ AdminLayout은 다음 슬롯을 제공:
 
 ### 새 레이아웃 생성
 
-1. `src/layouts/`에 새 레이아웃 폴더 생성
+1. `src/components/Layout/`에 새 레이아웃 파일 생성
 
 ```
-layouts/
-└── CustomLayout/
-    ├── components/
-    │   └── ...
-    ├── index.vue
-    └── style.scss
+components/Layout/
+└── CustomLayout.vue
 ```
 
 2. 레이아웃 컴포넌트 작성
 
 ```vue
-<!-- CustomLayout/index.vue -->
+<!-- src/components/Layout/CustomLayout.vue -->
 <template>
   <div class="custom-layout">
     <header>Custom Header</header>
@@ -266,7 +261,7 @@ layouts/
 ```typescript
 {
   path: '/custom-page',
-  component: () => import('@/layouts/CustomLayout/index.vue'),
+  component: () => import('@/components/Layout/CustomLayout.vue'),
   children: [
     {
       path: '',
@@ -284,7 +279,7 @@ layouts/
 // 后台管理布局
 {
   path: '/admin',
-  component: () => import('@/layouts/AdminLayout/index.vue'),
+  component: () => import('@/components/Layout/AdminLayout.vue'),
   children: [
     { path: 'dashboard', component: Dashboard },
     { path: 'users', component: Users },
@@ -294,7 +289,7 @@ layouts/
 // 登录页布局
 {
   path: '/login',
-  component: () => import('@/layouts/BlankLayout/index.vue'),
+  component: () => import('@/views/login/index.vue'),
 }
 ```
 

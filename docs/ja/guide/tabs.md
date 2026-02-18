@@ -65,7 +65,7 @@ Vue の `<KeepAlive>` コンポーネントは、動的コンポーネントの�
 
 ### キャッシュの設定
 
-`src/layouts/AdminLayout/index.vue` で：
+`src/components/Layout/AdminLayout.vue` で：
 
 ```vue
 <template>
