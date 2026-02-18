@@ -71,6 +71,12 @@ export const zh = defineConfig({
           ],
         },
         {
+          text: '工程质量',
+          items: [
+            { text: '测试体系', link: '/guide/testing' },
+          ],
+        },
+        {
           text: '其他',
           items: [
             { text: '部署指南', link: '/guide/deployment' },
