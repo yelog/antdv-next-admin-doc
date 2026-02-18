@@ -66,6 +66,13 @@ export const en = defineConfig({
           ],
         },
         {
+          text: 'Input Extensions',
+          items: [
+            { text: 'JsonInput Component', link: '/en/guide/json-input' },
+            { text: 'I18nInput Component', link: '/en/guide/i18n-input' },
+          ],
+        },
+        {
           text: 'System Modules',
           items: [
             { text: 'User Management', link: '/en/guide/system-user' },

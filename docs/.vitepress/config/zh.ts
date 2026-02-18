@@ -66,6 +66,13 @@ export const zh = defineConfig({
           ],
         },
         {
+          text: '输入增强',
+          items: [
+            { text: 'JsonInput 组件', link: '/guide/json-input' },
+            { text: 'I18nInput 组件', link: '/guide/i18n-input' },
+          ],
+        },
+        {
           text: '系统模块',
           items: [
             { text: '用户管理', link: '/guide/system-user' },
