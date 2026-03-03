@@ -71,6 +71,7 @@ export const zh = defineConfig({
           items: [
             { text: 'JsonInput 组件', link: '/guide/json-input' },
             { text: 'I18nInput 组件', link: '/guide/i18n-input' },
+            { text: '高级筛选脚手架', link: '/guide/scaffold-advanced-filter' },
           ],
         },
         {
