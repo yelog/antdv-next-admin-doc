@@ -9,6 +9,7 @@
 - [侧边栏配置](#侧边栏配置)
 - [响应式适配](#响应式适配)
 - [布局组件](#布局组件)
+- [头部交互能力](#头部交互能力)
 - [自定义布局](#自定义布局)
 
 ---
@@ -227,6 +228,41 @@ AdminLayout 提供以下插槽：
   </template>
 </AdminLayout>
 ```
+
+---
+
+## 头部交互能力
+
+Header 不只是导航条，还承担了全局操作入口。核心实现位于：
+
+- `src/components/Layout/Header.vue`
+- `src/components/Layout/GlobalSearch.vue`
+- `src/components/Layout/NotificationPanel.vue`
+- `src/components/Layout/AICollabPanel.vue`
+
+### 1. 全局搜索（Global Search）
+
+- 点击头部搜索入口可打开搜索面板。
+- 支持快捷键 `Ctrl + K`（Windows/Linux）和 `⌘ + K`（macOS）。
+- 建议将搜索结果按「菜单/页面/最近访问」分组展示，降低定位成本。
+
+### 2. 通知面板（Notification Panel）
+
+- 头部通知按钮展示未读状态。
+- 支持标记全部已读、清空、单条删除、跳转通知详情页。
+- 通知数据由 `notification store` 管理，适合接入业务消息中心。
+
+### 3. AI 协作入口（AI Collab）
+
+- 当 `layoutStore.aiEntryVisible` 为 `true` 时显示 AI 开关。
+- 支持面板开关与快捷提示词操作，适合页面内解释、总结、风险提示等场景。
+- 建议在生产场景接入真实后端推理服务，替换示例回复逻辑。
+
+### 4. 移动端降级策略
+
+- 移动端头部操作收敛到 `More` 下拉菜单。
+- 需保留核心能力：全屏、主题、语言、设置、AI 开关（可选）。
+- 全局搜索仍建议保留独立入口，避免深层菜单操作成本。
 
 ---
 
