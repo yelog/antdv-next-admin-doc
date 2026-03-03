@@ -56,6 +56,7 @@ export const zh = defineConfig({
             { text: '高级表格脚手架', link: '/guide/scaffold-pro-table-advanced' },
             { text: '复杂表单脚手架', link: '/guide/scaffold-complex-form' },
             { text: '主从详情脚手架', link: '/guide/scaffold-master-detail' },
+            { text: '虚拟表格脚手架', link: '/guide/scaffold-virtual-table' },
           ],
         },
         {
