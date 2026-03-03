@@ -64,6 +64,7 @@ export const zh = defineConfig({
           items: [
             { text: '文件上传系统脚手架', link: '/guide/scaffold-upload-system' },
             { text: '状态缓存脚手架', link: '/guide/scaffold-state-cache' },
+            { text: '导入导出脚手架', link: '/guide/scaffold-import-export' },
           ],
         },
         {
