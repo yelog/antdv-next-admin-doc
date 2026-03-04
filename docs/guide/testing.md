@@ -2,14 +2,18 @@
 
 ## 现状
 
-项目已接入两类测试运行器：
+::: warning 注意
+项目目前**未安装测试框架**。以下内容为测试体系的规划方案，待后续实现。
+:::
+
+### 计划中的测试框架
 
 - 单元测试：Vitest（`tests/unit/**/*.spec.ts`）
 - E2E 测试：Playwright（`tests/e2e/**/*.spec.ts`）
 
-## 可用命令
+## 规划的命令
 
-在 `antdv-next-admin/` 目录执行：
+安装测试框架后，在 `antdv-next-admin/` 目录执行：
 
 ```bash
 # 单测
@@ -25,7 +29,9 @@ npm run test:e2e:ui
 npm run test:e2e:debug
 ```
 
-## 关键配置入口
+## 配置文件规划
+
+安装测试框架后需要创建：
 
 - Vitest 配置：`vitest.config.ts`
   - `environment: 'jsdom'`
@@ -70,6 +76,18 @@ jobs:
 - P1：`system.user` 新增、编辑、删除、筛选与分页。
 - P1：`request-auth` 401 刷新与并发重试。
 - P2：多语言切换、主题切换、标签页缓存一致性。
+
+## 安装测试框架
+
+如果需要添加测试支持，可执行：
+
+```bash
+# 安装 Vitest
+pnpm add -D vitest @vue/test-utils jsdom
+
+# 安装 Playwright
+pnpm add -D @playwright/test
+```
 
 ## 相关文档
 
