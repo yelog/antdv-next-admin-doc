@@ -140,3 +140,44 @@ Mock 服务器会自动热重载，新接口即刻可用。
 ::: tip 响应格式
 所有 Mock 接口遵循统一的响应格式：`{ code: 200, data: any, message: string }`。Axios 拦截器会检查 `code` 字段。
 :::
+
+## 静态部署 Mock 方案
+
+对于 GitHub Pages 等静态托管环境，`vite-plugin-mock-dev-server` 无法工作。项目提供了客户端 Mock 拦截器解决方案。
+
+### 工作原理
+
+`src/utils/mockInterceptor.ts` 在应用启动时检测 Mock 模式，拦截 `fetch()` 和 `XMLHttpRequest` 请求，返回预设的 Mock 数据。
+
+### 启用方式
+
+```bash
+# .env.production（用于静态部署）
+VITE_USE_MOCK=true
+VITE_API_BASE_URL=
+```
+
+### 实现细节
+
+```typescript
+// src/main.ts
+import { setupMockInterceptor } from '@/utils/mockInterceptor'
+
+// 在应用启动时调用
+setupMockInterceptor()
+```
+
+拦截器会：
+1. 检查 `VITE_USE_MOCK` 是否为 `true`
+2. 检查是否非开发环境
+3. 覆盖全局 `fetch` 和 `XMLHttpRequest`
+4. 匹配 API 路径并返回 Mock 数据
+
+### 支持的请求方式
+
+- **fetch API** - 拦截 `window.fetch`
+- **Axios (XMLHttpRequest)** - 拦截 `XMLHttpRequest` 对象
+
+::: warning 注意
+此方案仅用于演示部署。生产环境应连接真实后端 API。
+:::
