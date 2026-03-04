@@ -531,6 +531,31 @@ getDict(type: string)                   // 获取字典
 setDict(type: string, data)             // 设置字典
 ```
 
+### 水印 (watermark)
+
+`src/stores/watermark.ts` - 全局水印管理
+
+```typescript
+const enabled = ref(false)              // 是否启用水印
+const options = ref<WatermarkOptions>({}) // 水印配置
+
+// Actions
+setWatermark(options)                   // 设置水印
+clearWatermark()                        // 清除水印
+```
+
+### 演示状态缓存 (demoStateCache)
+
+`src/stores/demoStateCache.ts` - 演示示例的状态持久化
+
+```typescript
+const keyword = ref('')                 // 示例关键字
+const counter = ref(0)                  // 计数器
+const notes = ref('')                   // 备注
+
+// 支持页面刷新后状态恢复
+```
+
 ---
 
 ## Store 组合使用
