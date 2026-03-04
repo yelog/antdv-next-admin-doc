@@ -32,6 +32,14 @@
 | **ProTable** | 高级表格，支持搜索表单、工具栏、分页、列类型渲染、列筛选、列拖拽调整 |
 | **ProForm** | 高级表单，支持 20+ 字段类型、网格布局、表单验证、动态选项 |
 | **ProModal** | 高级弹窗，支持拖拽移动、边缘缩放、全屏切换 |
+| **ProChart** | 图表组件，封装 ECharts，支持折线/柱状/饼图等 |
+| **ProStatCard** | 统计卡片，带趋势指示器 |
+| **ProStepForm** | 分步表单向导 |
+| **ProDescriptions** | 配置化描述列表 |
+| **ProDetail** | 详情页布局，支持标签页 |
+| **ProSplitLayout** | 分栏布局 |
+| **ProUpload** | 增强上传组件 |
+| **ProStatus** | 状态指示器 |
 
 ### 主题系统
 
@@ -42,7 +50,7 @@
 
 ### 国际化
 
-- 内置中文和英文
+- 内置四种语言：中文、英文、日文、韩文
 - 支持运行时动态切换
 - 基于 vue-i18n，易于扩展新语言
 
@@ -53,7 +61,7 @@
 - 移动端响应式适配
 - Mock 数据系统（基于 faker.js）
 - 全局键盘快捷搜索（`Ctrl+K`）
-- 富文本编辑器（TipTap）
+- 富文本编辑器（TipTap 和 Milkdown）
 - ECharts 图表集成
 
 ## 技术栈
@@ -70,6 +78,7 @@
 | Axios | 1.6 | HTTP 请求库 |
 | ECharts | 5 | 数据可视化图表 |
 | TipTap | 3 | 富文本编辑器 |
+| Milkdown | 7 | Markdown 编辑器（WYSIWYG） |
 
 ## 浏览器兼容
 
