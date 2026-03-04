@@ -73,21 +73,40 @@ pnpm preview
 
 | 文件 | 说明 |
 | --- | --- |
-| `.env` | 所有环境通用的变量 |
-| `.env.development` | 开发环境变量 |
-| `.env.production` | 生产环境变量 |
+| `.env` | 所有环境通用的基础变量 |
+| `.env.development` | 开发环境变量（Mock 模式） |
+| `.env.production` | 生产环境变量（静态部署配置） |
 
 ### 关键变量
 
 ```bash
-# 应用标题
-VITE_APP_TITLE=Antdv Next Admin
+# 是否启用 Mock 数据
+VITE_USE_MOCK=true
 
 # API 基础路径
+# 开发环境：/api（使用 vite-plugin-mock-dev-server）
+# 生产环境：空（使用客户端 Mock 拦截器）或实际 API 地址
 VITE_API_BASE_URL=/api
+```
 
-# 是否启用 Mock 数据（开发环境默认开启）
+### 环境配置示例
+
+**开发环境** `.env.development`:
+```bash
 VITE_USE_MOCK=true
+VITE_API_BASE_URL=/api
+```
+
+**生产环境（静态部署）** `.env.production`:
+```bash
+VITE_USE_MOCK=true
+VITE_API_BASE_URL=
+```
+
+**生产环境（连接后端）** `.env.production`:
+```bash
+VITE_USE_MOCK=false
+VITE_API_BASE_URL=https://api.example.com
 ```
 
 ::: warning 注意
