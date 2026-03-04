@@ -11,7 +11,7 @@ Antdv Next Admin 提供了灵活的主题系统，通过 CSS 变量和 Pinia Sto
 | 模式 | 说明 |
 | --- | --- |
 | `light` | 亮色模式 |
-| `dark` | 暗色模式（使用 Ant Design `darkAlgorithm`） |
+| `dark` | 暗色模式（通过 `.dark` 类 + CSS 变量实现） |
 | `auto` | 跟随系统设置自动切换 |
 
 ### 切换主题模式
@@ -32,17 +32,17 @@ themeStore.setThemeMode('auto')   // 跟随系统
 
 | 颜色 | 色值 | 名称 |
 | --- | --- | --- |
-| 🔵 蓝色 | `#1677ff` | 默认 |
-| 🟢 绿色 | `#52c41a` | — |
-| 🟣 紫色 | `#722ed1` | — |
-| 🔴 红色 | `#f5222d` | — |
-| 🟠 橙色 | `#fa8c16` | — |
-| 🔵 青色 | `#13c2c2` | — |
+| 🔵 蓝色 | `#1890ff` | 拂晓蓝（默认） |
+| 🟢 绿色 | `#52c41a` | 极光绿 |
+| 🟣 紫色 | `#722ed1` | 酱紫 |
+| 🔴 红色 | `#f5222d` | 薄暮红 |
+| 🟠 橙色 | `#fa8c16` | 日暮橙 |
+| 🔵 青色 | `#13c2c2` | 明青 |
 
 ### 设置主题色
 
 ```typescript
-themeStore.setPrimaryColor('#1677ff')  // 任意有效颜色值
+themeStore.setPrimaryColor('#1890ff')  // 任意有效颜色值
 ```
 
 ## CSS 变量
@@ -51,26 +51,49 @@ themeStore.setPrimaryColor('#1677ff')  // 任意有效颜色值
 
 ```css
 :root {
-  /* 主色 */
-  --ant-primary-color: #1677ff;
+  /* 主色系列（10级色阶） */
+  --color-primary-1: #e6f7ff;
+  --color-primary-2: #bae7ff;
+  --color-primary-3: #91d5ff;
+  --color-primary-4: #69c0ff;
+  --color-primary-5: #40a9ff;
+  --color-primary-6: #1890ff;  /* 主色 */
+  --color-primary-7: #096dd9;
+  --color-primary-8: #0050b3;
+  --color-primary-9: #003a8c;
+  --color-primary-10: #002766;
+  --color-primary: var(--color-primary-6);
 
   /* 背景色 */
-  --bg-color: #ffffff;
-  --bg-color-secondary: #f5f5f5;
+  --color-bg-container: #ffffff;
+  --color-bg-layout: #F5F7FA;
 
   /* 文字颜色 */
-  --text-color: rgba(0, 0, 0, 0.88);
-  --text-color-secondary: rgba(0, 0, 0, 0.65);
-
-  /* 侧边栏 */
-  --sidebar-bg-color: #001529;
-  --sidebar-text-color: rgba(255, 255, 255, 0.65);
+  --color-text-primary: rgba(0, 0, 0, 0.85);
+  --color-text-secondary: rgba(0, 0, 0, 0.65);
+  --color-text-tertiary: rgba(0, 0, 0, 0.45);
 
   /* 更多变量... */
 }
+
+/* 暗色模式 */
+:root.dark {
+  --color-text-primary: rgba(255, 255, 255, 0.85);
+  --color-text-secondary: rgba(255, 255, 255, 0.65);
+  --color-bg-container: #1f1f1f;
+  --color-bg-layout: #141414;
+}
 ```
 
-Theme Store 在主题切换时动态更新 `document.documentElement` 上的 CSS 变量。
+Theme Store 通过设置 `data-primary-color` 属性和 `.dark` 类来切换主题：
+
+```html
+<!-- 蓝色主题 + 亮色模式 -->
+<html data-primary-color="blue">
+
+<!-- 绿色主题 + 暗色模式 -->
+<html data-primary-color="green" class="dark">
+```
 
 ### 使用 CSS 变量
 
@@ -78,11 +101,24 @@ Theme Store 在主题切换时动态更新 `document.documentElement` 上的 CSS
 
 ```css
 .my-component {
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  border: 1px solid var(--border-color);
+  background-color: var(--color-bg-container);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
 }
 ```
+
+### 预设主题色
+
+项目通过 `data-primary-color` 属性切换预设主题色：
+
+| 属性值 | 主色 |
+|--------|------|
+| `blue` | `#1890ff`（默认） |
+| `green` | `#52c41a` |
+| `purple` | `#722ed1` |
+| `red` | `#f5222d` |
+| `orange` | `#fa8c16` |
+| `cyan` | `#13c2c2` |
 
 ::: tip 最佳实践
 优先使用 CSS 变量而非硬编码颜色值，确保组件在所有主题模式下正确显示。
@@ -109,4 +145,22 @@ Theme Store 在主题切换时动态更新 `document.documentElement` 上的 CSS
 
 ### Ant Design 主题
 
-暗色模式通过 Ant Design Vue 的 `darkAlgorithm` 实现，确保所有 Ant Design 组件在暗色模式下正确渲染。
+暗色模式通过 CSS 变量实现，确保所有 Ant Design 组件在暗色模式下正确渲染。项目定义了完整的暗色变量覆盖：
+
+```css
+:root.dark {
+  --color-text-primary: rgba(255, 255, 255, 0.85);
+  --color-bg-container: #1f1f1f;
+  --shadow-card: 0 8px 28px rgba(0, 0, 0, 0.28);
+}
+```
+
+### 灰色模式
+
+项目还支持灰色模式，通过在 `<html>` 元素添加 `.gray-mode` 类实现：
+
+```css
+html.gray-mode {
+  filter: grayscale(100%);
+}
+```
