@@ -9,29 +9,35 @@
 ```vue
 <script setup lang="ts">
 import ProTable from '@/components/Pro/ProTable/index.vue'
-import type { ProTableColumn, ProTableRequest } from '@/types/pro'
+import type { ProTableColumn, ProFormItem, ProTableRequest } from '@/types/pro'
 
-const columns: ProTableColumn[] = [
+// Search form configuration (recommended: use ProFormItem)
+const searchFormItems: ProFormItem[] = [
+  { name: 'name', label: 'Name', type: 'input' },
   {
-    title: 'Name',
-    dataIndex: 'name',
-    search: true,
+    name: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { label: 'Active', value: 'active' },
+      { label: 'Inactive', value: 'inactive' },
+    ],
   },
+]
+
+// Table columns configuration
+const columns: ProTableColumn[] = [
+  { title: 'Name', dataIndex: 'name' },
   {
     title: 'Status',
     dataIndex: 'status',
     valueType: 'tag',
-    search: true,
     options: [
       { label: 'Active', value: 'active', color: 'green' },
       { label: 'Inactive', value: 'inactive', color: 'red' },
     ],
   },
-  {
-    title: 'Created At',
-    dataIndex: 'createdAt',
-    valueType: 'dateTime',
-  },
+  { title: 'Created At', dataIndex: 'createdAt', valueType: 'dateTime' },
   {
     title: 'Actions',
     dataIndex: 'actions',
@@ -49,7 +55,7 @@ const request: ProTableRequest = async (params) => {
 </script>
 
 <template>
-  <ProTable :columns="columns" :request="request" />
+  <ProTable :columns="columns" :request="request" :search="{ formItems: searchFormItems }" />
 </template>
 ```
 

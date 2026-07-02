@@ -9,29 +9,35 @@
 ```vue
 <script setup lang="ts">
 import ProTable from '@/components/Pro/ProTable/index.vue'
-import type { ProTableColumn, ProTableRequest } from '@/types/pro'
+import type { ProTableColumn, ProFormItem, ProTableRequest } from '@/types/pro'
 
-const columns: ProTableColumn[] = [
+// 搜索表单配置（推荐使用 ProFormItem）
+const searchFormItems: ProFormItem[] = [
+  { name: 'name', label: '姓名', type: 'input' },
   {
-    title: '姓名',
-    dataIndex: 'name',
-    search: true,
+    name: 'status',
+    label: '状态',
+    type: 'select',
+    options: [
+      { label: '启用', value: 'active' },
+      { label: '禁用', value: 'inactive' },
+    ],
   },
+]
+
+// 表格列配置
+const columns: ProTableColumn[] = [
+  { title: '姓名', dataIndex: 'name' },
   {
     title: '状态',
     dataIndex: 'status',
     valueType: 'tag',
-    search: true,
     options: [
       { label: '启用', value: 'active', color: 'green' },
       { label: '禁用', value: 'inactive', color: 'red' },
     ],
   },
-  {
-    title: '创建时间',
-    dataIndex: 'createdAt',
-    valueType: 'dateTime',
-  },
+  { title: '创建时间', dataIndex: 'createdAt', valueType: 'dateTime' },
   {
     title: '操作',
     dataIndex: 'actions',
@@ -49,7 +55,7 @@ const request: ProTableRequest = async (params) => {
 </script>
 
 <template>
-  <ProTable :columns="columns" :request="request" />
+  <ProTable :columns="columns" :request="request" :search="{ formItems: searchFormItems }" />
 </template>
 ```
 
@@ -139,16 +145,39 @@ const request: ProTableRequest = async (params) => {
 | `checkbox` | 复选框 |
 | `radio` | 单选框 |
 
+## 搜索表单配置
+
+推荐使用 `search.formItems` 配置搜索表单，使用 `ProFormItem` 类型定义搜索字段：
+
+```vue
+<script setup lang="ts">
+import type { ProFormItem } from '@/types/pro'
+
+const searchFormItems: ProFormItem[] = [
+  { name: 'keyword', label: '关键词', type: 'input' },
+  { name: 'status', label: '状态', type: 'select', options: statusOptions },
+  { name: 'dateRange', label: '创建时间', type: 'dateRange' },
+]
+</script>
+
+<template>
+  <ProTable :search="{ formItems: searchFormItems, collapsedRows: 1 }" />
+</template>
+```
+
+`ProFormItem` 支持 21 种字段类型（input、select、datePicker、cascader、treeSelect 等）、条件联动、异步选项、自定义渲染等完整功能。
+
+> **注意**：`columns` 中的 `search: true` 配置仍可使用，但推荐使用 `search.formItems` 以获得更完整的功能支持。
+
 ## 统一选项 (Unified Options)
 
-通过 `options` 属性可以一次性定义列的选项数据，自动派生 `valueEnum`（用于渲染）和 `searchOptions`（用于搜索下拉）：
+通过 `options` 属性可以一次性定义列的选项数据，自动派生 `valueEnum`（用于渲染）：
 
 ```typescript
 {
   title: '状态',
   dataIndex: 'status',
   valueType: 'tag',
-  search: true,
   options: [
     { label: '启用', value: 'active', color: 'green' },
     { label: '禁用', value: 'inactive', color: 'red' },
@@ -156,7 +185,7 @@ const request: ProTableRequest = async (params) => {
 }
 ```
 
-等价于分别设置 `valueEnum` + `searchOptions`，减少重复配置。如果同时设置了 `options` 和 `valueEnum`/`searchOptions`，后者优先。
+如果同时设置了 `options` 和 `valueEnum`，后者优先。
 
 ## valueTypeProps 格式化参数
 
