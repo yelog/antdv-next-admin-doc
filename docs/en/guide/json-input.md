@@ -10,7 +10,7 @@
 ## Core Capabilities
 
 - Single-column nested editor with indentation and expand/collapse
-- Same-parent drag sorting (moving a parent keeps all descendants)
+- Hierarchy drag editing: vertical drag reorders within the same parent, horizontal drag adjusts field hierarchy automatically, with descendants moved together
 - Optional add/remove fields
 - Field type awareness: `string / number / boolean / tags / array / object`
 - Structured mode and raw JSON mode switching
@@ -109,9 +109,12 @@ const config = ref({
 
 ### Drag Scope
 
-- Drag sorting is currently same-parent only
-- Reordering a parent keeps its entire subtree together
-- Cross-parent re-parenting is not supported yet
+- Vertical drag: reorder fields within the same parent
+- Left drag: promote the field to the parent's parent level
+- Right drag: demote the field under the previous same-level object sibling
+- Moving an object field keeps its entire subtree together
+- Moving a field into itself or one of its descendants is blocked
+- Moving into a target parent with the same field key is blocked to avoid overwriting existing config
 
 ## Advanced Example
 
