@@ -13,240 +13,250 @@
 
 ### 1. 分页查询用户列表
 
-使用 `ProTable` 实现用户列表的展示、筛选和分页：
+使用 `ProTable` + `search.formItems` 实现用户列表的展示、筛选和分页：
 
 ```vue
-<ProTable
-  :columns="columns"
-  :request="requestUsers"
-  :search="{ labelWidth: 80 }"
-  row-key="id"
-/>
+<template>
+  <ProTable
+    ref="tableRef"
+    :columns="columns"
+    :request="fetchTableData"
+    :toolbar="toolbarConfig"
+    :search="{
+      formItems: searchFormItems,
+      labelWidth: 6,
+      defaultCollapsed: true,
+    }"
+    row-key="id"
+  />
+</template>
 ```
 
-### 2. 按关键字筛选
+### 2. 搜索表单配置
+
+**推荐使用 `search.formItems` 配置搜索字段**，使用 `ProFormItem` 类型定义：
 
 ```typescript
-const columns: ProTableColumn[] = [
+const searchFormItems = computed<ProFormItem[]>(() => [
+  { name: 'username', label: '用户名', type: 'input' },
+  { name: 'email', label: '邮箱', type: 'input' },
   {
-    title: "用户名",
-    dataIndex: "username",
-    search: true,
-    searchType: "input",
-  },
-  {
-    title: "手机号",
-    dataIndex: "phone",
-    search: true,
-    searchType: "input",
-  },
-  {
-    title: "状态",
-    dataIndex: "status",
-    search: true,
-    searchType: "select",
-    searchOptions: [
-      { label: "启用", value: "active" },
-      { label: "禁用", value: "inactive" },
+    name: 'status',
+    label: '状态',
+    type: 'select',
+    options: [
+      { label: '启用', value: 'active' },
+      { label: '禁用', value: 'inactive' },
     ],
   },
-];
+])
 ```
 
-### 3. 新增、编辑、删除用户
+### 3. 用户列表列配置
 
-使用 `ProModal` + `ProForm` 实现用户表单：
+```typescript
+const columns = computed((): ProTableColumn[] => [
+  { title: '用户名', dataIndex: 'username', width: 150, fixed: 'left' },
+  { title: '姓名', dataIndex: 'realName', width: 140 },
+  { title: '邮箱', dataIndex: 'email', width: 220 },
+  { title: '手机号', dataIndex: 'phone', width: 150 },
+  { title: '角色', dataIndex: 'roleNames', width: 220 },
+  {
+    title: '性别',
+    dataIndex: 'gender',
+    width: 100,
+    valueType: 'tag',
+    valueEnum: {
+      male: { text: '男', color: 'blue' },
+      female: { text: '女', color: 'magenta' },
+    },
+  },
+  {
+    title: '状态',
+    dataIndex: 'status',
+    width: 120,
+    valueType: 'badge',
+    valueEnum: {
+      active: { text: '启用', status: 'success' },
+      inactive: { text: '禁用', status: 'default' },
+    },
+  },
+  {
+    title: '创建时间',
+    dataIndex: 'createdAt',
+    width: 200,
+    valueType: 'dateTime',
+  },
+  {
+    title: '操作',
+    dataIndex: 'action',
+    width: 160,
+    fixed: 'right',
+    actions: [
+      { label: '编辑', icon: EditOutlined, onClick: (record) => handleEdit(record) },
+      { label: '删除', icon: DeleteOutlined, danger: true, confirm: '确认删除？', onClick: (record) => handleDelete(record) },
+    ],
+  },
+])
+```
+
+### 4. 新增、编辑、删除用户
+
+使用 `ProModal` + `ProForm` 实现用户表单，**推荐使用 `search.formItems` 等价于 ProFormItem 的配置方式**：
 
 ```vue
-<ProModal
-  v-model:open="modalOpen"
-  :title="modalType === 'create' ? '新增用户' : '编辑用户'"
+<a-modal
+  v-model:open="modalVisible"
+  :title="editingUserId ? '编辑用户' : '新增用户'"
+  width="760px"
   @ok="handleSubmit"
 >
   <ProForm
-    v-model="formData"
-    :items="formItems"
-    :grid="{ cols: 2 }"
+    ref="formRef"
+    :form-items="formItems"
+    :initial-values="formData"
+    :grid="{ cols: 2, gutter: 16 }"
+    :layout="{ layout: 'vertical' }"
   />
-</ProModal>
+</a-modal>
 ```
 
-### 4. 角色分配与状态切换
+### 5. 表单字段配置
 
-```vue
-<template #bodyCell="{ column, record }">
-  <template v-if="column.dataIndex === 'roles'">
-    <a-tag v-for="role in record.roles" :key="role.id">
-      {{ role.name }}
-    </a-tag>
-  </template>
-  <template v-if="column.dataIndex === 'status'">
-    <a-switch
-      :checked="record.status === 'active'"
-      @change="handleStatusChange(record.id, $event)"
-    />
-  </template>
-</template>
+```typescript
+const formItems = computed<ProFormItem[]>(() => [
+  {
+    name: 'username',
+    label: '用户名',
+    type: 'input',
+    required: true,
+    props: { disabled: Boolean(editingUserId.value) },
+    rules: [
+      { required: true, message: '请输入用户名' },
+      { min: 3, max: 20, message: '用户名长度 3-20 个字符' },
+    ],
+  },
+  { name: 'realName', label: '姓名', type: 'input', required: true },
+  {
+    name: 'email',
+    label: '邮箱',
+    type: 'input',
+    required: true,
+    rules: [{ required: true, message: '请输入邮箱' }, { type: 'email', message: '邮箱格式不正确' }],
+  },
+  {
+    name: 'phone',
+    label: '手机号',
+    type: 'input',
+    rules: [{ pattern: /^1[3-9]\d{9}$/, message: '手机号格式不正确' }],
+  },
+  {
+    name: 'gender',
+    label: '性别',
+    type: 'select',
+    options: [
+      { label: '男', value: 'male' },
+      { label: '女', value: 'female' },
+    ],
+  },
+  {
+    name: 'status',
+    label: '状态',
+    type: 'switch',
+    valuePropName: 'checked',
+    props: {
+      checkedChildren: '启用',
+      unCheckedChildren: '禁用',
+    },
+  },
+  {
+    name: 'roleIds',
+    label: '角色',
+    type: 'select',
+    options: roleSelectOptions, // 从 API 获取的角色选项
+    props: { mode: 'multiple', allowClear: true },
+    rules: [{ type: 'array', required: true, message: '请选择角色' }],
+  },
+  {
+    name: 'bio',
+    label: '个人简介',
+    type: 'textarea',
+    colSpan: 2,
+    props: { rows: 3, maxLength: 200, showCount: true },
+  },
+])
 ```
 
 ## 典型数据结构
 
 ```typescript
-interface UserItem {
+interface User {
   id: string;
   username: string; // 用户名（唯一）
   realName: string; // 真实姓名
   phone?: string; // 手机号
   email?: string; // 邮箱
-  status: "active" | "inactive"; // 状态
-  roleIds: string[]; // 绑定的角色 ID
-  deptId?: string; // 所属部门 ID
+  gender: 'male' | 'female'; // 性别
+  status: 'active' | 'inactive'; // 状态
+  bio?: string; // 个人简介
+  roles: Role[]; // 绑定的角色列表
   createdAt: string; // 创建时间
   updatedAt: string; // 更新时间
 }
+```
 
-interface UserForm {
-  username: string;
-  realName: string;
-  phone?: string;
-  email?: string;
-  password?: string; // 新增时必填
-  roleIds: string[];
-  deptId?: string;
+## 数据请求
+
+```typescript
+const fetchTableData = async (params: Record<string, unknown>) => {
+  const response = await getUserList({
+    current: Number(params.current || 1),
+    pageSize: Number(params.pageSize || 10),
+    username: (params.username as string)?.trim() || undefined,
+    email: (params.email as string)?.trim() || undefined,
+    status: params.status as string,
+  })
+
+  const list = response.data.list.map((item) => ({
+    ...item,
+    roleNames: item.roles.map((role) => role.name).join(', '),
+  }))
+
+  return {
+    data: list,
+    total: response.data.total,
+    success: true,
+  }
 }
 ```
 
-## 页面实现建议
+## 注意事项
 
-### 1. 使用 ProTable 管理列表
+### 1. 角色选项预加载
 
 ```typescript
-// 列配置
-const columns: ProTableColumn[] = [
-  { title: '用户名', dataIndex: 'username', search: true },
-  { title: '姓名', dataIndex: 'realName', search: true },
-  { title: '手机号', dataIndex: 'phone' },
-  { title: '邮箱', dataIndex: 'email' },
-  { title: '角色', dataIndex: 'roles' },
-  { title: '状态', dataIndex: 'status', valueType: 'tag' },
-  { title: '创建时间', dataIndex: 'createdAt', valueType: 'dateTime' },
-  { title: '操作', dataIndex: 'action', fixed: 'right', actions: [...] },
-]
+onMounted(async () => {
+  const response = await getRoleList({ current: 1, pageSize: 200 })
+  roleOptions.value = response.data.list
+})
+```
 
-// 数据请求
-const requestUsers: ProTableRequest = async (params) => {
-  const res = await getUserList(params)
-  return { data: res.list, total: res.total, success: true }
+### 2. 编辑时用户名不可修改
+
+```typescript
+props: {
+  disabled: Boolean(editingUserId.value)
 }
 ```
 
-### 2. 使用 ProModal + ProForm 管理弹窗
+### 3. 状态值转换
+
+ProForm 的 Switch 组件使用 `valuePropName: 'checked'`，提交时需转换为字符串值：
 
 ```typescript
-const formItems: ProFormItem[] = [
-  { type: "input", name: "username", label: "用户名", required: true },
-  { type: "input", name: "realName", label: "姓名", required: true },
-  { type: "input", name: "phone", label: "手机号" },
-  { type: "input", name: "email", label: "邮箱" },
-  {
-    type: "password",
-    name: "password",
-    label: "密码",
-    required: modalType === "create",
-  },
-  {
-    type: "select",
-    name: "roleIds",
-    label: "角色",
-    mode: "multiple",
-    options: roleOptions,
-  },
-  { type: "tree-select", name: "deptId", label: "部门", treeData: deptTree },
-];
-```
-
-### 3. 删除前二次确认
-
-```typescript
-const handleDelete = (record: UserItem) => {
-  Modal.confirm({
-    title: "确认删除",
-    content: `确定要删除用户「${record.realName}」吗？`,
-    onOk: async () => {
-      await deleteUser(record.id);
-      message.success("删除成功");
-      refreshTable();
-    },
-  });
-};
-```
-
-### 4. 敏感字段脱敏
-
-```typescript
-// 手机号脱敏
-const maskPhone = (phone: string) => {
-  if (!phone || phone.length < 7) return phone;
-  return phone.replace(/(\d{3})\d{4}(\d{4})/, "$1****$2");
-};
-
-// 邮箱脱敏
-const maskEmail = (email: string) => {
-  if (!email) return email;
-  const [name, domain] = email.split("@");
-  return `${name.slice(0, 2)}***@${domain}`;
-};
-```
-
-## 最佳实践
-
-### 1. 密码安全处理
-
-- 新增用户时强制设置初始密码
-- 密码传输使用加密（HTTPS + RSA/SM2）
-- 前端不存储密码明文
-
-### 2. 角色变更实时生效
-
-```typescript
-const handleRoleChange = async (userId: string, roleIds: string[]) => {
-  await updateUserRoles(userId, roleIds);
-
-  // 如果修改的是当前用户，刷新权限
-  if (userId === currentUser.value?.id) {
-    await permissionStore.fetchPermissions();
-  }
-
-  message.success("角色更新成功");
-};
-```
-
-### 3. 状态联动
-
-禁用用户时应同时：
-
-- 强制下线（清除 token）
-- 禁止新登录
-- 记录操作日志
-
-### 4. 数据导入
-
-```typescript
-const handleImport = async (file: File) => {
-  // 1. 解析 Excel/CSV
-  const users = await parseUserFile(file);
-
-  // 2. 校验数据
-  const errors = validateUsers(users);
-  if (errors.length > 0) {
-    showImportErrors(errors);
-    return;
-  }
-
-  // 3. 批量导入
-  await batchImportUsers(users);
-  message.success(`成功导入 ${users.length} 个用户`);
-};
+status: typeof values.status === 'boolean'
+  ? (values.status ? 'active' : 'inactive')
+  : values.status
 ```
 
 ## 相关文档
@@ -254,4 +264,5 @@ const handleImport = async (file: File) => {
 - [权限系统](/guide/permission)
 - [角色管理](/guide/system-role)
 - [API 集成](/guide/api-integration)
-- [示例与实战](/guide/examples)
+- [ProTable 高级表格](/components/pro-table)
+- [ProForm 高级表单](/components/pro-form)

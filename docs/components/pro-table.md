@@ -77,6 +77,8 @@ const request: ProTableRequest = async (params) => {
 | `ellipsis` | `boolean` | `true` | 文本溢出省略 |
 | `bordered` | `boolean` | `true` | 是否显示边框 |
 | `fixedHeader` | `boolean` | `true` | 是否固定表头 |
+| `showIndexColumn` | `boolean` | `true` | 是否显示行号列 |
+| `layout` | `'page' \| 'content'` | `'page'` | 布局模式 |
 | `formItems` | `ProFormItem[]` | — | 内置 CRUD 弹窗的表单配置 |
 | `formLayout` | `ProFormLayout` | — | 弹窗表单布局 |
 | `formGrid` | `ProFormGrid` | — | 弹窗表单网格 |
@@ -147,7 +149,7 @@ const request: ProTableRequest = async (params) => {
 
 ## 搜索表单配置
 
-推荐使用 `search.formItems` 配置搜索表单，使用 `ProFormItem` 类型定义搜索字段：
+> **推荐**：使用 `search.formItems` 配置搜索表单，使用 `ProFormItem` 类型定义搜索字段。这是**推荐的首选方式**，支持 21 种字段类型、条件联动、异步选项、自定义渲染等完整功能。`columns` 中的 `search: true` 为旧方式，功能有限，仅在简单场景下使用。
 
 ```vue
 <script setup lang="ts">
@@ -167,11 +169,11 @@ const searchFormItems: ProFormItem[] = [
 
 `ProFormItem` 支持 21 种字段类型（input、select、datePicker、cascader、treeSelect 等）、条件联动、异步选项、自定义渲染等完整功能。
 
-> **注意**：`columns` 中的 `search: true` 配置仍可使用，但推荐使用 `search.formItems` 以获得更完整的功能支持。
+> **注意**：`columns` 中的 `search: true` 配置仍可使用，但功能有限——仅支持 `input`、`select`、`datePicker`、`dateRange`、`number`、`checkbox`、`radio` 7 种类型，不支持条件联动和自定义渲染。推荐使用 `search.formItems` 以获得更完整的功能支持。
 
 ## 统一选项 (Unified Options)
 
-通过 `options` 属性可以一次性定义列的选项数据，自动派生 `valueEnum`（用于渲染）：
+通过 `options` 属性可以一次性定义列的选项数据，自动派生 `valueEnum`（用于渲染）和 `searchOptions`（用于搜索筛选）：
 
 ```typescript
 {
@@ -184,6 +186,11 @@ const searchFormItems: ProFormItem[] = [
   ],
 }
 ```
+
+设置 `options` 后：
+- `valueEnum` 自动派生（用于表格列的 tag/badge 渲染）
+- `searchOptions` 自动派生（用于搜索表单的下拉选择）
+- 无需分别设置 `valueEnum` 和 `searchOptions`
 
 如果同时设置了 `options` 和 `valueEnum`，后者优先。
 

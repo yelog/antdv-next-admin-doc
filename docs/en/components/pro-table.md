@@ -77,6 +77,8 @@ const request: ProTableRequest = async (params) => {
 | `ellipsis` | `boolean` | `true` | Text overflow ellipsis |
 | `bordered` | `boolean` | `true` | Show border |
 | `fixedHeader` | `boolean` | `true` | Fixed header on scroll |
+| `showIndexColumn` | `boolean` | `true` | Show row index column |
+| `layout` | `'page' \| 'content'` | `'page'` | Layout mode |
 | `formItems` | `ProFormItem[]` | — | Form config for built-in CRUD modal |
 | `formLayout` | `ProFormLayout` | — | CRUD modal form layout |
 | `formGrid` | `ProFormGrid` | — | CRUD modal form grid |
@@ -145,6 +147,30 @@ Column configuration interface defining rendering, search, and interaction behav
 | `checkbox` | Checkbox |
 | `radio` | Radio |
 
+## Search Form Configuration
+
+> **Recommended**: use `search.formItems` with `ProFormItem` types. This is the **primary recommended approach**, supporting 21 field types, conditional visibility, async options, and custom rendering. The `columns.search` approach is a legacy fallback with limited functionality — only 7 basic types are supported.
+
+```vue
+<script setup lang="ts">
+import type { ProFormItem } from '@/types/pro'
+
+const searchFormItems: ProFormItem[] = [
+  { name: 'keyword', label: 'Keyword', type: 'input' },
+  { name: 'status', label: 'Status', type: 'select', options: statusOptions },
+  { name: 'dateRange', label: 'Created At', type: 'dateRange' },
+]
+</script>
+
+<template>
+  <ProTable :search="{ formItems: searchFormItems, collapsedRows: 1 }" />
+</template>
+```
+
+`ProFormItem` supports 21 field types (input, select, datePicker, cascader, treeSelect, etc.), conditional visibility, async options, and custom render functions.
+
+> **Note**: the `columns.search` approach still works but is limited to 7 types (input, select, datePicker, dateRange, number, checkbox, radio) with no conditional visibility or custom rendering. Use `search.formItems` for full feature support.
+
 ## Unified Options
 
 Use the `options` property to define column options once, automatically deriving both `valueEnum` (for rendering) and `searchOptions` (for search dropdowns):
@@ -162,7 +188,7 @@ Use the `options` property to define column options once, automatically deriving
 }
 ```
 
-This is equivalent to setting `valueEnum` + `searchOptions` separately, reducing configuration duplication. If both `options` and `valueEnum`/`searchOptions` are set, the latter takes precedence.
+This is equivalent to setting `valueEnum` + `searchOptions` separately, reducing configuration duplication. Setting `options` automatically derives both `valueEnum` (for table rendering) and `searchOptions` (for search dropdowns). If both `options` and `valueEnum`/`searchOptions` are set, the latter takes precedence.
 
 ## valueTypeProps
 

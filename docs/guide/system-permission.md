@@ -16,234 +16,338 @@
 采用 `domain.resource.action` 三段式命名：
 
 ```typescript
-// 格式：<模块>.<资源>.<操作>
 const PERMISSION_EXAMPLES = {
-  // 系统管理模块
-  "system.user.view": "查看用户",
-  "system.user.create": "新增用户",
-  "system.user.edit": "编辑用户",
-  "system.user.delete": "删除用户",
-
-  "system.role.view": "查看角色",
-  "system.role.create": "新增角色",
-  "system.role.edit": "编辑角色",
-  "system.role.delete": "删除角色",
-
-  // 业务模块
-  "order.list.view": "查看订单列表",
-  "order.detail.view": "查看订单详情",
-  "order.export": "导出订单",
-
-  "report.dashboard.view": "查看仪表盘",
-  "report.generate": "生成报表",
-};
+  'system.user.view': '查看用户',
+  'system.user.create': '新增用户',
+  'system.user.edit': '编辑用户',
+  'system.user.delete': '删除用户',
+  'system.role.view': '查看角色',
+  'system.role.create': '新增角色',
+  'system.role.edit': '编辑角色',
+  'system.role.delete': '删除角色',
+}
 ```
 
 ### 使用场景
 
 ```typescript
 // 1. 路由级权限
-{
-  path: '/system/user',
-  meta: {
-    requiredPermissions: ['system.user.view'],
-  },
-}
+{ path: '/system/user', meta: { requiredPermissions: ['system.user.view'] } }
 
 // 2. 按钮级权限 - 指令方式
 <a-button v-permission="'system.user.create'">新增用户</a-button>
 
-// 3. 按钮级权限 - 组件方式
-<PermissionButton permission="system.user.delete" danger>删除</PermissionButton>
-
-// 4. 编程式权限检查
+// 3. 编程式权限检查
 const { can } = usePermission()
-if (can('system.user.edit')) {
-  // 有编辑权限
-}
+if (can('system.user.edit')) { /* ... */ }
 ```
 
 ## 核心能力
 
-### 1. 权限点树形维护
+### 1. 权限点树形管理
+
+使用 `ProTable` 的树形模式展示权限层级，配合搜索筛选：
 
 ```vue
 <template>
-  <a-table
+  <ProTable
+    ref="tableRef"
     :columns="columns"
-    :data-source="permissionTree"
+    :request="fetchTableData"
+    :toolbar="toolbarConfig"
+    :search="{
+      formItems: searchFormItems,
+      defaultCollapsed: false,
+    }"
     :pagination="false"
-    :default-expand-all-rows="true"
-    children-column-name="children"
+    :show-index-column="false"
+    row-key="id"
+    :expanded-row-keys="expandedRowKeys"
+    :children-column-name="'children'"
+    @expanded-rows-change="handleExpandedRowsChange"
   >
-    <template #bodyCell="{ column, record }">
-      <template v-if="column.dataIndex === 'code'">
-        <a-tag>{{ record.code }}</a-tag>
-      </template>
-      <template v-if="column.dataIndex === 'type'">
-        <a-tag :color="record.type === 'menu' ? 'blue' : 'green'">
-          {{ record.type === "menu" ? "菜单" : "按钮" }}
-        </a-tag>
-      </template>
+    <template #toolbar-actions>
+      <a-button type="primary" @click="handleCreateRoot"><PlusOutlined /> 创建根权限</a-button>
+      <a-button @click="expandAllRows">全部展开</a-button>
+      <a-button @click="collapseAllRows">全部折叠</a-button>
     </template>
-  </a-table>
+  </ProTable>
 </template>
 ```
 
-### 2. 权限点新增/编辑/删除
+### 2. 搜索表单配置
 
 ```typescript
-const formItems: ProFormItem[] = [
-  { type: "input", name: "name", label: "权限名称", required: true },
-  { type: "input", name: "code", label: "权限标识", required: true },
+const searchFormItems = computed<ProFormItem[]>(() => [
+  { name: 'keyword', label: '关键词', type: 'input' },
   {
-    type: "select",
-    name: "type",
-    label: "权限类型",
+    name: 'type',
+    label: '类型',
+    type: 'select',
     options: [
-      { label: "菜单", value: "menu" },
-      { label: "按钮", value: "button" },
+      { label: '菜单', value: 'menu' },
+      { label: '按钮', value: 'button' },
+      { label: '接口', value: 'api' },
     ],
-    defaultValue: "button",
   },
   {
-    type: "tree-select",
-    name: "parentId",
-    label: "上级权限",
-    treeData: permissionTree,
+    name: 'status',
+    label: '状态',
+    type: 'select',
+    options: [
+      { label: '启用', value: 'active' },
+      { label: '禁用', value: 'inactive' },
+    ],
   },
-  { type: "input-number", name: "sort", label: "排序", defaultValue: 0 },
-];
+])
 ```
 
-### 3. 角色与权限点联动
+### 3. 列配置（树形表格）
 
 ```typescript
-// 获取角色的权限树
-const getRolePermissionTree = async (roleId: string) => {
-  const allPermissions = await getAllPermissions();
-  const rolePermissions = await getRolePermissions(roleId);
+const columns = computed((): ProTableColumn[] => [
+  {
+    title: '名称',
+    dataIndex: 'name',
+    width: 220,
+    fixed: 'left',
+    render: (value) => resolveLocalizedText(value), // 支持多语言
+  },
+  { title: '标识', dataIndex: 'code', width: 220 },
+  {
+    title: '类型',
+    dataIndex: 'type',
+    width: 120,
+    valueType: 'tag',
+    valueEnum: {
+      menu: { text: '菜单', color: 'processing' },
+      button: { text: '按钮', color: 'success' },
+      api: { text: '接口', color: 'purple' },
+    },
+  },
+  { title: '路由路径', dataIndex: 'path', width: 170 },
+  { title: '组件路径', dataIndex: 'component', width: 220 },
+  {
+    title: '状态',
+    dataIndex: 'status',
+    width: 120,
+    valueType: 'badge',
+    valueEnum: {
+      active: { text: '启用', status: 'success' },
+      inactive: { text: '禁用', status: 'default' },
+    },
+  },
+  {
+    title: '是否可见',
+    dataIndex: 'visible',
+    width: 100,
+    valueType: 'tag',
+    valueEnum: {
+      true: { text: '显示', color: 'blue' },
+      false: { text: '隐藏', color: 'default' },
+    },
+  },
+  { title: '排序', dataIndex: 'sort', width: 90 },
+  {
+    title: '操作',
+    dataIndex: 'action',
+    width: 260,
+    fixed: 'right',
+    actions: [
+      { label: '编辑', icon: EditOutlined, onClick: (record) => handleEdit(record) },
+      { label: '删除', icon: DeleteOutlined, danger: true, confirm: '确认删除？', onClick: (record) => handleDelete(record) },
+      {
+        label: '新增子级',
+        icon: PlusOutlined,
+        hidden: (record) => record.type !== 'menu',
+        onClick: (record) => handleCreateChild(record),
+      },
+    ],
+  },
+])
+```
 
-  // 标记已选中的权限
-  const checkedIds = new Set(rolePermissions.map((p) => p.id));
+### 4. 新增/编辑权限
 
-  return {
-    tree: buildPermissionTree(allPermissions),
-    checkedKeys: Array.from(checkedIds),
-  };
-};
+使用 `ProForm` 实现权限表单，名称使用 `I18nInput` 组件支持多语言，图标使用 `IconPicker` 组件：
+
+```vue
+<a-modal
+  v-model:open="modalVisible"
+  :title="modalTitle"
+  width="760px"
+  @ok="handleSubmit"
+>
+  <a-alert v-if="currentParentName" type="info" show-icon style="margin-bottom: 12px">
+    父菜单：{{ currentParentName }}
+  </a-alert>
+  <ProForm
+    ref="formRef"
+    :form-items="formItems"
+    :initial-values="formData"
+    :grid="{ cols: 2, gutter: 16 }"
+    :layout="{ layout: 'vertical' }"
+    @values-change="handleFormValuesChange"
+  />
+</a-modal>
+```
+
+### 5. 表单字段配置
+
+```typescript
+const formItems = computed<ProFormItem[]>(() => [
+  {
+    name: 'name',
+    label: '名称',
+    type: 'custom',
+    render: I18nInput, // 多语言名称输入组件
+    required: true,
+  },
+  {
+    name: 'code',
+    label: '标识',
+    type: 'input',
+    required: true,
+    props: { disabled: Boolean(editingPermissionId.value) },
+    rules: [{ required: true }, { pattern: /^[a-zA-Z0-9_.-]+$/ }],
+  },
+  {
+    name: 'type',
+    label: '类型',
+    type: 'select',
+    options: [
+      { label: '菜单', value: 'menu' },
+      { label: '按钮', value: 'button' },
+      { label: '接口', value: 'api' },
+    ],
+    required: true,
+  },
+  // 以下字段根据 type 动态显示/隐藏
+  {
+    name: 'status',
+    label: '状态',
+    type: 'switch',
+    valuePropName: 'checked',
+    props: { checkedChildren: '启用', unCheckedChildren: '禁用' },
+  },
+  { name: 'path', label: '路由路径', type: 'input', hidden: currentType !== 'menu' },
+  { name: 'component', label: '组件路径', type: 'input', hidden: currentType !== 'menu' },
+  {
+    name: 'icon', label: '图标', type: 'custom', render: IconPicker,
+    hidden: currentType !== 'menu',
+  },
+  { name: 'sort', label: '排序', type: 'number', hidden: currentType !== 'menu', props: { min: 0 } },
+  { name: 'description', label: '描述', type: 'textarea', colSpan: 2, props: { rows: 3 } },
+  {
+    name: 'visible', label: '是否可见', type: 'switch', colSpan: 2,
+    valuePropName: 'checked',
+    props: { checkedChildren: '显示', unCheckedChildren: '隐藏' },
+  },
+])
+```
+
+### 6. 权限类型联动
+
+通过 `@values-change` 监听表单值变化，根据 `type` 动态显示/隐藏字段：
+
+```typescript
+const handleFormValuesChange = (values: Record<string, unknown>) => {
+  formValues.value = { ...formValues.value, ...values }
+}
+
+const currentType = computed(() => formValues.value.type || 'menu')
+```
+
+### 7. 展开/折叠所有行
+
+```typescript
+const expandedRowKeys = ref<string[]>([])
+
+const expandAllRows = () => {
+  expandedRowKeys.value = collectPermissionIds(menuTree.value)
+}
+
+const collapseAllRows = () => {
+  expandedRowKeys.value = []
+}
+
+function collectPermissionIds(list: Permission[]): string[] {
+  const ids: string[] = []
+  list.forEach((item) => {
+    ids.push(item.id)
+    if (item.children) ids.push(...collectPermissionIds(item.children))
+  })
+  return ids
+}
 ```
 
 ## 数据结构
 
 ```typescript
-interface PermissionItem {
+interface Permission {
   id: string;
-  name: string; // 权限名称
+  name: LocalizedText | string; // 权限名称（支持多语言）
   code: string; // 权限标识
-  type: "menu" | "button"; // 权限类型
+  type: 'menu' | 'button' | 'api'; // 权限类型
   parentId?: string; // 父级 ID
   path?: string; // 菜单路径（type=menu）
-  icon?: string; // 图标
+  component?: string; // 组件路径（type=menu）
+  icon?: string; // 图标（type=menu）
   sort: number; // 排序
-  status: "active" | "inactive";
-  children?: PermissionItem[];
+  status: 'active' | 'inactive'; // 状态
+  visible: boolean; // 是否可见
+  resource?: string; // 资源标识
+  action?: string; // 操作标识
+  description?: string;
+  children?: Permission[];
+}
+
+interface LocalizedText {
+  'zh-CN': string;
+  'en-US': string;
+  'ja-JP': string;
+  'ko-KR': string;
 }
 ```
 
-## 最佳实践
-
-### 1. 先定义权限字典
+## 数据请求
 
 ```typescript
-// constants/permissions.ts
-export const PERMISSIONS = {
-  // 用户管理
-  USER_VIEW: 'system.user.view',
-  USER_CREATE: 'system.user.create',
-  USER_EDIT: 'system.user.edit',
-  USER_DELETE: 'system.user.delete',
-
-  // 角色管理
-  ROLE_VIEW: 'system.role.view',
-  ROLE_CREATE: 'system.role.create',
-  ROLE_EDIT: 'system.role.edit',
-  ROLE_DELETE: 'system.role.delete',
-} as const
-
-// 使用
-import { PERMISSIONS } from '@/constants/permissions'
-
-<a-button v-permission="PERMISSIONS.USER_CREATE">新增</a-button>
-```
-
-### 2. 权限命名保持稳定
-
-```typescript
-// ✅ 好：权限命名稳定
-'system.user.create'
-
-// ❌ 避免：频繁重命名
-'system.user.add' → 'system.user.create' → 'system.user.new'
-```
-
-### 3. 前端权限仅用于体验优化
-
-```typescript
-// 前端隐藏无权限按钮（体验优化）
-<a-button v-permission="'system.user.delete'" danger>删除</a-button>
-
-// 后端必须做真正的权限校验
-@DeleteMapping("/users/{id}")
-@PreAuthorize("hasPermission('system.user.delete')")
-public void deleteUser(@PathVariable String id) {
-  // ...
+const fetchTableData = async (params: Record<string, unknown>) => {
+  const response = await getPermissionList({
+    keyword: (params.keyword as string)?.trim() || undefined,
+    type: params.type || undefined,
+    status: params.status || undefined,
+  })
+  menuTree.value = response.data
+  return { data: response.data, total: 0, success: true }
 }
 ```
 
-### 4. 权限缓存与更新
+## 注意事项
+
+### 1. 名称多语言处理
+
+权限名称使用 `I18nInput` 组件输入，在列渲染时需解析当前语言：
 
 ```typescript
-// stores/permission.ts
-export const usePermissionStore = defineStore("permission", () => {
-  const permissions = ref<string[]>([]);
-
-  // 获取权限列表
-  const fetchPermissions = async () => {
-    const res = await getMyPermissions();
-    permissions.value = res.map((p) => p.code);
-  };
-
-  // 检查权限
-  const hasPermission = (code: string) => {
-    return permissions.value.includes(code);
-  };
-
-  return { permissions, fetchPermissions, hasPermission };
-});
+const resolveLocalizedText = (value: string | LocalizedText | undefined) => {
+  if (!value) return ''
+  if (typeof value === 'string') return value
+  const locale = getLocale()
+  return value[locale] || value['zh-CN'] || value['en-US'] || ''
+}
 ```
 
-## 权限继承设计
+### 2. 新增子权限
+
+只有 `type === 'menu'` 的权限才允许新增子级。新增子权限时自动设置 `parentId` 和 `type: 'menu'`。
+
+### 3. 提交时自动派生 resource/action
 
 ```typescript
-// 权限继承关系
-interface PermissionTreeNode extends PermissionItem {
-  inheritedFrom?: string[]; // 从哪些角色继承而来
-}
-
-// 计算用户最终权限
-const calculateUserPermissions = (user: User) => {
-  const permissionSet = new Set<string>();
-
-  // 遍历用户所有角色
-  for (const role of user.roles) {
-    for (const perm of role.permissions) {
-      permissionSet.add(perm.code);
-    }
-  }
-
-  return Array.from(permissionSet);
-};
+resource: type === 'menu' ? normalizePath(path) : code.replace(/\.[^.]+$/, ''),
+action: type === 'menu' ? 'view' : code.split('.').pop() || '*',
 ```
 
 ## 相关文档
@@ -251,3 +355,5 @@ const calculateUserPermissions = (user: User) => {
 - [权限系统](/guide/permission)
 - [角色管理](/guide/system-role)
 - [路由系统](/guide/routing)
+- [ProTable 高级表格](/components/pro-table)
+- [ProForm 高级表单](/components/pro-form)
