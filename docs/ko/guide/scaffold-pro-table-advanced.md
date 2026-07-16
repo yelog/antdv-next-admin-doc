@@ -11,6 +11,21 @@
 - 페이지네이션 및 데이터 새로고침
 - 도구 모음 작업
 - 행 선택 및 일괄 작업
+- 행당 2, 3, 4, 5개의 검색 필드를 동적으로 전환하는 레이아웃 데모
+
+데모 컨트롤은 실제 ProTable 검색 설정을 업데이트합니다.
+
+```vue
+<ProTable
+  :search="{
+    formItems: searchFormItems,
+    columnsPerRow: searchColumnsPerRow,
+    collapsedRows: 1,
+  }"
+/>
+```
+
+이 값은 데모 로컬 상태이며 사용자 환경설정에 저장되지 않습니다. 프로젝트 기본값은 `appDefaultSettings.proTable.search.columnsPerRow`에서 설정합니다.
 
 ## 기본 사용법
 

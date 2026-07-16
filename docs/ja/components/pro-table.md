@@ -139,6 +139,28 @@ Column configuration interface defining rendering, search, and interaction behav
 | `checkbox` | Checkbox |
 | `radio` | Radio |
 
+## 1 行あたりの検索項目数
+
+`search.columnsPerRow` は、検索領域の 1 行に表示する項目数を制御します。固定値またはレスポンシブなブレークポイント設定を指定できます。
+
+```ts
+const search = {
+  columnsPerRow: {
+    xs: 1,
+    sm: 2,
+    md: 2,
+    lg: 3,
+    xl: 4,
+  },
+  collapsedRows: 1,
+  formItems: searchFormItems,
+}
+```
+
+既定値は `appDefaultSettings.proTable.search.columnsPerRow` から取得され、個別の ProTable 設定が優先されます。固定値を指定しても狭い画面では 1 列に戻ります。`collapsedRows` は現在のブレークポイントの列数を使用して表示項目数を計算します。
+
+`/examples/pro-table-advanced` では 2、3、4、5 列を動的に切り替えられます。
+
 ## Unified Options
 
 Use the `options` property to define column options once, automatically deriving both `valueEnum` (for rendering) and `searchOptions` (for search dropdowns):

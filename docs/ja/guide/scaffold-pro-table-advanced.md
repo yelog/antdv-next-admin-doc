@@ -11,6 +11,21 @@
 - ページネーションとデータリフレッシュ
 - ツールバー操作
 - 行選択と一括操作
+- 1 行あたり 2、3、4、5 個の検索項目を動的に切り替えるレイアウトデモ
+
+デモの切り替えは実際の ProTable 設定を更新します。
+
+```vue
+<ProTable
+  :search="{
+    formItems: searchFormItems,
+    columnsPerRow: searchColumnsPerRow,
+    collapsedRows: 1,
+  }"
+/>
+```
+
+この値はデモ内だけの状態で、ユーザー設定には保存されません。プロジェクトの既定値は `appDefaultSettings.proTable.search.columnsPerRow` で設定します。
 
 ## 基本的な使い方
 

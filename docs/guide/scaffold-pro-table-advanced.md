@@ -43,6 +43,19 @@ const columns: ProTableColumn[] = [
 - 搜索条件自动同步到表格请求参数
 - 分页切换保持搜索条件
 - 支持折叠式搜索表单（`collapsedRows`）
+- 页面顶部可动态切换每行 2、3、4、5 个搜索项，直接验证 `columnsPerRow`
+
+```vue
+<ProTable
+  :search="{
+    formItems: searchFormItems,
+    columnsPerRow: searchColumnsPerRow,
+    collapsedRows: 1,
+  }"
+/>
+```
+
+该控制只用于示例演示，不会写入用户偏好；项目默认值应配置在 `appDefaultSettings.proTable.search.columnsPerRow`。
 
 ### 3. 批量操作
 

@@ -163,13 +163,41 @@ const searchFormItems: ProFormItem[] = [
 </script>
 
 <template>
-  <ProTable :search="{ formItems: searchFormItems, collapsedRows: 1 }" />
+  <ProTable
+    :search="{
+      formItems: searchFormItems,
+      collapsedRows: 1,
+      columnsPerRow: 4,
+    }"
+  />
 </template>
 ```
 
 `ProFormItem` 支持 21 种字段类型（input、select、datePicker、cascader、treeSelect 等）、条件联动、异步选项、自定义渲染等完整功能。
 
 > **注意**：`columns` 中的 `search: true` 配置仍可使用，但功能有限——仅支持 `input`、`select`、`datePicker`、`dateRange`、`number`、`checkbox`、`radio` 7 种类型，不支持条件联动和自定义渲染。推荐使用 `search.formItems` 以获得更完整的功能支持。
+
+### 每行搜索项数量
+
+`search.columnsPerRow` 控制搜索区每行显示的字段数量，支持固定数字和响应式断点对象：
+
+```ts
+const search = {
+  columnsPerRow: {
+    xs: 1,
+    sm: 2,
+    md: 2,
+    lg: 3,
+    xl: 4,
+  },
+  collapsedRows: 1,
+  formItems: searchFormItems,
+}
+```
+
+默认值来自 `appDefaultSettings.proTable.search.columnsPerRow`，单个 ProTable 的配置优先级更高。传入固定数字时，窄屏仍自动回落为一列。`collapsedRows` 会按当前断点的真实列数计算收起状态下的可见字段。
+
+可在 `/examples/pro-table-advanced` 中动态切换 2、3、4、5 列并查看实际效果。
 
 ## 统一选项 (Unified Options)
 

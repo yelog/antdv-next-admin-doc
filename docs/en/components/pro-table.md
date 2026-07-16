@@ -163,13 +163,41 @@ const searchFormItems: ProFormItem[] = [
 </script>
 
 <template>
-  <ProTable :search="{ formItems: searchFormItems, collapsedRows: 1 }" />
+  <ProTable
+    :search="{
+      formItems: searchFormItems,
+      collapsedRows: 1,
+      columnsPerRow: 4,
+    }"
+  />
 </template>
 ```
 
 `ProFormItem` supports 21 field types (input, select, datePicker, cascader, treeSelect, etc.), conditional visibility, async options, and custom render functions.
 
 > **Note**: the `columns.search` approach still works but is limited to 7 types (input, select, datePicker, dateRange, number, checkbox, radio) with no conditional visibility or custom rendering. Use `search.formItems` for full feature support.
+
+### Search fields per row
+
+`search.columnsPerRow` controls how many search fields appear in each row. It accepts either a fixed number or a responsive breakpoint object:
+
+```ts
+const search = {
+  columnsPerRow: {
+    xs: 1,
+    sm: 2,
+    md: 2,
+    lg: 3,
+    xl: 4,
+  },
+  collapsedRows: 1,
+  formItems: searchFormItems,
+}
+```
+
+The default comes from `appDefaultSettings.proTable.search.columnsPerRow`; an individual ProTable configuration takes precedence. A fixed number still falls back to one column on narrow screens. `collapsedRows` uses the active breakpoint column count when calculating visible fields.
+
+Open `/examples/pro-table-advanced` to switch between 2, 3, 4, and 5 columns interactively.
 
 ## Unified Options
 
