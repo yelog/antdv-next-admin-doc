@@ -499,10 +499,13 @@ layoutStore.detectDevice()
 `src/stores/settings.ts` - 用户个性化设置
 
 ```typescript
-const showBreadcrumb = ref(true)        // 显示面包屑
-const showTabs = ref(true)              // 显示标签栏
-const enableAnimation = ref(true)       // 启用动画
-const grayMode = ref(false)             // 灰色模式
+const primaryColor = ref<PrimaryColor>('blue')  // 主题色
+const sidebarTheme = ref<SidebarTheme>('light') // 侧边栏主题
+const layoutMode = ref<LayoutMode>('vertical')  // 布局模式
+const pageAnimation = ref<PageAnimation>('slide-left') // 页面动画
+const grayMode = ref(false)                    // 灰色模式
+const rememberTabState = ref(true)             // 记住标签页状态
+const showLanguageSwitch = ref(true)           // 显示语言切换按钮
 ```
 
 ### 通知 (notification)

@@ -499,10 +499,13 @@ layoutStore.detectDevice()
 `src/stores/settings.ts` - ユーザーのパーソナライズ設定
 
 ```typescript
-const showBreadcrumb = ref(true)        // パンくずを表示
-const showTabs = ref(true)              // タブバーを表示
-const enableAnimation = ref(true)       // アニメーションを有効化
-const grayMode = ref(false)             // グレーモード
+const primaryColor = ref<PrimaryColor>('blue')  // テーマカラー
+const sidebarTheme = ref<SidebarTheme>('light') // サイドバーテーマ
+const layoutMode = ref<LayoutMode>('vertical')  // レイアウトモード
+const pageAnimation = ref<PageAnimation>('slide-left') // ページアニメーション
+const grayMode = ref(false)                    // グレーモード
+const rememberTabState = ref(true)             // タブ状態を記憶
+const showLanguageSwitch = ref(true)           // 言語切り替えボタンを表示
 ```
 
 ### 通知 (notification)
